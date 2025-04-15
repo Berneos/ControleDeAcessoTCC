@@ -7,13 +7,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -27,8 +29,11 @@ public class Instituicao implements Serializable{
 	private Long id;
 	private String nome;
 	private String cnpj;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant dataCadastro;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "empresa")
 	private List<Pessoa> pessoas = new ArrayList<>();
 	
@@ -36,7 +41,8 @@ public class Instituicao implements Serializable{
 	private List<Catraca> catracas = new ArrayList<>();
 	private List<Acesso> acessos = new ArrayList<>();	
 	private List<Plano> planos = new ArrayList<>();	
-	private Tipo tipo;
+	
+	private Integer tipo;
 	
 	
 	public Instituicao(Long id, String nome, String cnpj, Instant dataCadastro, List<Pessoa> pessoas,
@@ -51,7 +57,7 @@ public class Instituicao implements Serializable{
 		this.catracas = catracas;
 		this.acessos = acessos;
 		this.planos = planos;
-		this.tipo = tipo;
+		setTipo(tipo);
 	}
 	public Instituicao(Long id, String nome, String cnpj, Instant dataCadastro, List<Pessoa> pessoas,
 			List<Usuario> usuarios, List<Catraca> catracas, List<Acesso> acessos, Tipo tipo) {
@@ -64,7 +70,7 @@ public class Instituicao implements Serializable{
 		this.usuarios = usuarios;
 		this.catracas = catracas;
 		this.acessos = acessos;
-		this.tipo = tipo;
+		setTipo(tipo);
 	}
 
 
@@ -90,8 +96,15 @@ public class Instituicao implements Serializable{
 
 	public Optional<List<Plano>> getPlanos() {return Optional.ofNullable(planos);}
 
-	public Tipo getTipo() {return tipo;}
-	public void ListTipo(Tipo tipo) {this.tipo = tipo;}
+	public Tipo getTipo() {return Tipo.valueOf(tipo);}
+	public void setTipo(Tipo tipo) {
+	
+		if(tipo != null) {
+			this.tipo = tipo.getCode();
+		}
+		
+		
+	}
 
 
 	@Override
