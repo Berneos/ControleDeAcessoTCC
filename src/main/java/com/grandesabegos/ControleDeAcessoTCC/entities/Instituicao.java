@@ -37,7 +37,12 @@ public class Instituicao implements Serializable{
 	@OneToMany(mappedBy = "empresa")
 	private List<Pessoa> pessoas = new ArrayList<>();
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "empresa")
 	private List<Usuario> usuarios = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "empresa")
 	private List<Catraca> catracas = new ArrayList<>();
 	private List<Acesso> acessos = new ArrayList<>();	
 	private List<Plano> planos = new ArrayList<>();	
