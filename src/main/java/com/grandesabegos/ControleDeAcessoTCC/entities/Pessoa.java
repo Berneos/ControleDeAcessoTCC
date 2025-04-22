@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo", length = 1, discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("P")
-public class Pessoa implements Serializable{
+abstract class Pessoa implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
