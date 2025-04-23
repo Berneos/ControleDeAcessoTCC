@@ -2,6 +2,8 @@ package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.DiscriminatorColumn;
@@ -43,6 +45,8 @@ abstract class Pessoa implements Serializable{
 	protected Byte biometria;
 	
 	protected String tipo;
+	
+	protected List<Acesso> acessos = new ArrayList<>();
 	
 	public Pessoa() {
 	}
@@ -106,6 +110,22 @@ abstract class Pessoa implements Serializable{
 			return false;
 		Pessoa other = (Pessoa) obj;
 		return Objects.equals(cpf, other.cpf);
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public List<Acesso> getAcessos() {
+		return acessos;
+	}
+
+	public void setAcessos(List<Acesso> acessos) {
+		this.acessos = acessos;
 	}
 	
 	

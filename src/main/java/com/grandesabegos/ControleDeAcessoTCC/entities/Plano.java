@@ -1,5 +1,6 @@
 package com.grandesabegos.ControleDeAcessoTCC.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_plano")
-public class Plano {
+public class Plano implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
