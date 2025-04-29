@@ -24,5 +24,17 @@ public class Funcionario extends Pessoa {
 		this.cargo = cargo;
 		this.salario = salario;
 	}
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
+
+	public Setor getSetor() {return setor;}
+	public void setSetor(Setor setor) {this.setor = setor;}
+
+	public Cargo getCargo() {return cargo;}
+	public void setCargo(Cargo cargo) {	this.cargo = cargo;}
+
+	public Double getSalario() {	return salario;}
+	public void setSalario(Double salario) {this.salario = salario;}
 	
 }
