@@ -1,7 +1,6 @@
 package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,10 @@ public class Setor implements Serializable{
 	@OneToMany(mappedBy = "setor")
 	private Set<Cargo> cargos = new HashSet<>();
 	
-	public Setor(Long id, String nome, Set<Funcionario> funcionario, Set<Cargo> cargos) {
+	
+	
+	public Setor(Long id, String nome, List<Funcionario> funcionario, List<Cargo> cargos) {
+
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -50,6 +52,7 @@ public class Setor implements Serializable{
 	public Set<Funcionario> getFuncionario() {return funcionario;}
 
 	public Set<Cargo> getCargos() {return cargos;}
+
 
 	@Override
 	public int hashCode() {

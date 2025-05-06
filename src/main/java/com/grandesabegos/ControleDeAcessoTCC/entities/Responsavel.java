@@ -1,7 +1,7 @@
 package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +29,7 @@ public class Responsavel implements Serializable{
 	@MapsId
 	private Estudante estudante;
 	
-	private List<Acesso> getAcessos(){
+	private Set<Acesso> getAcessos(){
 		
 		return estudante.getAcessos();
 		

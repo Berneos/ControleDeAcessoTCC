@@ -1,6 +1,7 @@
 package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -36,6 +38,8 @@ public class Cargo implements Serializable{
 	@JsonIgnore
 	@OneToMany(mappedBy = "cargo")
 	private Set<Funcionario> funcionarios = new HashSet<>();
+	@ManyToMany
+	private List<Setor> setores = new ArrayList<>();
 	
 	public Cargo(Long id, String nome) {
 		super();
@@ -52,6 +56,8 @@ public class Cargo implements Serializable{
 	public Setor getSetor() {return setor;}
 
 	public Set<Funcionario> getFuncionarios() {return funcionarios;}
+	public List<Setor> getSetores() {return setores;}
+
 
 	@Override
 	public int hashCode() {

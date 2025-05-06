@@ -3,10 +3,13 @@ package com.grandesabegos.ControleDeAcessoTCC.entities;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -19,6 +22,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,7 +30,7 @@ import jakarta.persistence.Table;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo", length = 1, discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("P")
-abstract class Pessoa implements Serializable{
+public class Pessoa implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -45,11 +49,13 @@ abstract class Pessoa implements Serializable{
 	
 	protected String endereco;
 	protected Byte foto;
-	protected Byte biometria;
+	protected Byte biometria; //biometria com id (numero gigante, comparando numeros) e arquivo
 	
-	protected String tipo;
 	
-	protected List<Acesso> acessos = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "pessoa")
+	protected Set<Acesso> acessos = new HashSet<>();
 	
 	public Pessoa() {
 	}
@@ -115,21 +121,15 @@ abstract class Pessoa implements Serializable{
 		return Objects.equals(cpf, other.cpf);
 	}
 
-	public String getTipo() {
-		return tipo;
-	}
+	
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 
-	public List<Acesso> getAcessos() {
+
+	public Set<Acesso> getAcessos() {
 		return acessos;
 	}
 
-	public void setAcessos(List<Acesso> acessos) {
-		this.acessos = acessos;
-	}
+
 	
 	
 	

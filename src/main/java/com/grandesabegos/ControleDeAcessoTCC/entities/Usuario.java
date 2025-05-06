@@ -2,9 +2,12 @@ package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,6 +43,10 @@ public class Usuario implements Serializable{
 	private String username;
 	private String email;
 	private String senha;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "usuario")
+	private Set<Acesso> acessos = new HashSet<>();
 	
 	public Usuario(Long id, String nome, String cpf, String telefone, Boolean isAdmin, Instant dataCadastro, Instituicao empresa,
 			String username, String email, String senha) {

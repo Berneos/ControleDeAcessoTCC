@@ -1,6 +1,10 @@
 package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,6 +30,11 @@ public class Catraca implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "empresa_id")
 	private Instituicao empresa;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "catraca")
+	private Set<Acesso> acessos = new HashSet<>();
+
 	
 	public Catraca(Long id, String nome) {
 		super();
