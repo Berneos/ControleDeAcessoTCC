@@ -24,9 +24,12 @@ public class Assinante extends Pessoa {
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant dataVencimento;
+
 	
 	@Convert(converter = TrueFalseConverter.class)
 	private Boolean ativo;
+
+	public Assinante() {}
 
 	public Assinante(Plano plano, Instant dataVencimento, Boolean ativo) {
 		super();
@@ -46,14 +49,15 @@ public class Assinante extends Pessoa {
 	public Instant getDataVencimento() {
 		return dataVencimento;
 	}
-
 	public void setDataVencimento(Instant dataVencimento) {
 		this.dataVencimento = dataVencimento;
 	}
+	
 	public Boolean getAtivo() {
 		return ativo;
 	}
 
+	
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}

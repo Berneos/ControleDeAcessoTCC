@@ -1,8 +1,9 @@
 package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,13 +30,13 @@ public class Plano implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "plano")
-	private List<Assinante> assinantes = new ArrayList<>(); 
+	private Set<Assinante> assinantes = new HashSet<>(); 
 	
 	@ManyToOne
 	@JoinColumn(name = "empresa_id")
 	private Instituicao empresa;
 	
-	public Plano(Long id, String nome, Double preco, String descricao, List<Assinante> assinantes,
+	public Plano(Long id, String nome, Double preco, String descricao, Set<Assinante> assinantes,
 			Instituicao empresa) {
 		super();
 		this.id = id;
@@ -57,8 +58,8 @@ public class Plano implements Serializable {
 	public String getDescricao() {	return descricao;}
 	public void setDescricao(String descricao) {this.descricao = descricao;}
 	
-	public List<Assinante> getAssinantes() {return assinantes;}
-	public void setAssinantes(List<Assinante> assinantes) {this.assinantes = assinantes;}
+	public Set<Assinante> getAssinantes() {return assinantes;}
+	public void setAssinantes(Set<Assinante> assinantes) {this.assinantes = assinantes;}
 	
 	public Instituicao getEmpresa() {return empresa;}
 	public void setEmpresa(Instituicao empresa) {this.empresa = empresa;}

@@ -2,8 +2,8 @@ package com.grandesabegos.ControleDeAcessoTCC.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Plano;
 
-public interface PlanoRepository extends JpaRepository<Acesso, Long>{
+public interface PlanoRepository extends JpaRepository<Plano, Long>{
 
 }

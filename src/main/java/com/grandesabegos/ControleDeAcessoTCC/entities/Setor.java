@@ -2,7 +2,6 @@ package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,42 +16,58 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_setores")
-public class Setor implements Serializable{
+public class Setor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "setor")
 	private Set<Funcionario> funcionario = new HashSet<>();
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "setor")
 	private Set<Cargo> cargos = new HashSet<>();
-	
-	
-	
-	public Setor(Long id, String nome, List<Funcionario> funcionario, List<Cargo> cargos) {
 
+	public Setor(Long id, String nome, Set<Funcionario> funcionario, Set<Cargo> cargos) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.funcionario = funcionario;
+		this.cargos = cargos;
 	}
 
-	public Long getId() {return id;}
-	public void setId(Long id) {this.id = id;}
+	public Setor() {
+		super();
+	}
 
-	public String getNome() {return nome;}
-	public void setNome(String nome) {this.nome = nome;}
+	public Long getId() {
+		return id;
+	}
 
-	public Set<Funcionario> getFuncionario() {return funcionario;}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-	public Set<Cargo> getCargos() {return cargos;}
+	public String getNome() {
+		return nome;
+	}
 
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public Set<Funcionario> getFuncionario() {
+		return funcionario;
+	}
+
+	public Set<Cargo> getCargos() {
+		return cargos;
+	}
 
 	@Override
 	public int hashCode() {
@@ -72,5 +87,4 @@ public class Setor implements Serializable{
 				&& Objects.equals(id, other.id) && Objects.equals(nome, other.nome);
 	}
 
-	
 }

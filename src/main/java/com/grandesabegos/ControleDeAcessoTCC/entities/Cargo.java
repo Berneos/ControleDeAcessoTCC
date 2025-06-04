@@ -30,7 +30,7 @@ public class Cargo implements Serializable{
 	private Long id;
 	
 	private String nome;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "setor_id")
 	private Setor setor;
@@ -38,8 +38,9 @@ public class Cargo implements Serializable{
 	@JsonIgnore
 	@OneToMany(mappedBy = "cargo")
 	private Set<Funcionario> funcionarios = new HashSet<>();
-	@ManyToMany
-	private List<Setor> setores = new ArrayList<>();
+
+
+
 	
 	public Cargo(Long id, String nome) {
 		super();
@@ -53,10 +54,12 @@ public class Cargo implements Serializable{
 	public String getNome() {return nome;}
 	public void setNome(String nome) {this.nome = nome;}
 
-	public Setor getSetor() {return setor;}
 
 	public Set<Funcionario> getFuncionarios() {return funcionarios;}
-	public List<Setor> getSetores() {return setores;}
+
+
+	public Setor getSetor() {return setor;}
+
 
 
 	@Override

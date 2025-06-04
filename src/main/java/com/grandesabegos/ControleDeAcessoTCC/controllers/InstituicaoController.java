@@ -1,4 +1,4 @@
-package com.grandesabegos.ControleDeAcessoTCC.resources;
+package com.grandesabegos.ControleDeAcessoTCC.controllers;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import com.grandesabegos.ControleDeAcessoTCC.services.InstituicaoService;
 
 @RestController
 @RequestMapping(value = "/instituicoes")
-public class InstituicaoResource {
+public class InstituicaoController {
 
 	@Autowired
 	private InstituicaoService service;

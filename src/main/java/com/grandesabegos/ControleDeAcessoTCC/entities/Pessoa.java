@@ -2,9 +2,7 @@ package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,9 +28,9 @@ import jakarta.persistence.Table;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo", length = 1, discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("P")
-public class Pessoa implements Serializable{
+public class Pessoa implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
@@ -42,21 +40,19 @@ public class Pessoa implements Serializable{
 	protected Boolean ativo;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	protected Instant dataCadastro;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "empresa_id")
 	protected Instituicao empresa;
-	
+
 	protected String endereco;
 	protected Byte foto;
-	protected Byte biometria; //biometria com id (numero gigante, comparando numeros) e arquivo
-	
-	
-	
+	protected Byte biometria; // biometria com id (numero gigante, comparando numeros) e arquivo
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "pessoa")
 	protected Set<Acesso> acessos = new HashSet<>();
-	
+
 	public Pessoa() {
 	}
 
@@ -74,35 +70,85 @@ public class Pessoa implements Serializable{
 		this.biometria = biometria;
 	}
 
-	public Long getId() {return id;}
-	public void setId(Long id) {this.id = id;}
+	public Long getId() {
+		return id;
+	}
 
-	public String getNome() {return nome;}
-	public void setNome(String nome) {this.nome = nome;}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-	public String getCpf() {return cpf;}
-	public void setCpf(String cpf) {this.cpf = cpf;}
+	public String getNome() {
+		return nome;
+	}
 
-	public String getTelefone() {return telefone;}
-	public void setTelefone(String telefone) {this.telefone = telefone;}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-	public Boolean getAtivo() {return ativo;}
-	public void setAtivo(Boolean ativo) {this.ativo = ativo;}
+	public String getCpf() {
+		return cpf;
+	}
 
-	public Instant getDataCadastro() {return dataCadastro;}
-	public void setDataCadastro(Instant dataCadastro) {this.dataCadastro = dataCadastro;}
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
 
-	public Instituicao getEmpresa() {return empresa;}
-	public void setEmpresa(Instituicao empresa) {this.empresa = empresa;}
+	public String getTelefone() {
+		return telefone;
+	}
 
-	public String getEndereco() {return endereco;}
-	public void setEndereco(String endereco) {this.endereco = endereco;}
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
 
-	public Byte getFoto() {return foto;}
-	public void setFoto(Byte foto) {this.foto = foto;}
+	public Boolean getAtivo() {
+		return ativo;
+	}
 
-	public Byte getBiometria() {return biometria;}
-	public void setBiometria(Byte biometria) {this.biometria = biometria;}
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	public Instant getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Instant dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
+
+	public Instituicao getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Instituicao empresa) {
+		this.empresa = empresa;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public Byte getFoto() {
+		return foto;
+	}
+
+	public void setFoto(Byte foto) {
+		this.foto = foto;
+	}
+
+	public Byte getBiometria() {
+		return biometria;
+	}
+
+	public void setBiometria(Byte biometria) {
+		this.biometria = biometria;
+	}
 
 	@Override
 	public int hashCode() {
@@ -121,16 +167,8 @@ public class Pessoa implements Serializable{
 		return Objects.equals(cpf, other.cpf);
 	}
 
-	
-
-
-
 	public Set<Acesso> getAcessos() {
 		return acessos;
 	}
 
-
-	
-	
-	
 }

@@ -2,17 +2,16 @@ package com.grandesabegos.ControleDeAcessoTCC.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,29 +34,30 @@ public class Instituicao implements Serializable{
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "empresa")
-	private List<Pessoa> pessoas = new ArrayList<>();
+	private Set<Pessoa> pessoas = new HashSet<>();
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "empresa")
-	private List<Usuario> usuarios = new ArrayList<>();
+	private Set<Usuario> usuarios = new HashSet<>();
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "empresa")
-	private List<Catraca> catracas = new ArrayList<>();
+	private Set<Catraca> catracas = new HashSet<>();
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "empresa")
-	private List<Acesso> acessos = new ArrayList<>();	
+	private Set<Acesso> acessos = new HashSet<>();	
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "empresa")
-	private List<Plano> planos = new ArrayList<>();	
+	private Set<Plano> planos = new HashSet<>();	
 	
 	private Integer tipo;
 	
+	public Instituicao() {}
 	
-	public Instituicao(Long id, String nome, String cnpj, Instant dataCadastro, List<Pessoa> pessoas,
-			List<Usuario> usuarios, List<Catraca> catracas, List<Acesso> acessos, List<Plano> planos, Tipo tipo) {
+	public Instituicao(Long id, String nome, String cnpj, Instant dataCadastro, Set<Pessoa> pessoas,
+			Set<Usuario> usuarios, Set<Catraca> catracas, Set<Acesso> acessos, Set<Plano> planos, Tipo tipo) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -70,8 +70,8 @@ public class Instituicao implements Serializable{
 		this.planos = planos;
 		setTipo(tipo);
 	}
-	public Instituicao(Long id, String nome, String cnpj, Instant dataCadastro, List<Pessoa> pessoas,
-			List<Usuario> usuarios, List<Catraca> catracas, List<Acesso> acessos, Tipo tipo) {
+	public Instituicao(Long id, String nome, String cnpj, Instant dataCadastro, Set<Pessoa> pessoas,
+			Set<Usuario> usuarios, Set<Catraca> catracas, Set<Acesso> acessos, Tipo tipo) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -97,15 +97,15 @@ public class Instituicao implements Serializable{
 	public Instant getDataCadastro() {return dataCadastro;}
 	public void ListDataCadastro(Instant dataCadastro) {this.dataCadastro = dataCadastro;}
 
-	public List<Pessoa> getPessoas() {return pessoas;}
+	public Set<Pessoa> getPessoas() {return pessoas;}
 
-	public List<Usuario> getUsuarios() {return usuarios;}
+	public Set<Usuario> getUsuarios() {return usuarios;}
 
-	public List<Catraca> getCatracas() {return catracas;}
+	public Set<Catraca> getCatracas() {return catracas;}
 
-	public List<Acesso> getAcessos() {return acessos;}
+	public Set<Acesso> getAcessos() {return acessos;}
 
-	public Optional<List<Plano>> getPlanos() {return Optional.ofNullable(planos);}
+	public Optional<Set<Plano>> getPlanos() {return Optional.ofNullable(planos);}
 
 	public Tipo getTipo() {return Tipo.valueOf(tipo);}
 	public void setTipo(Tipo tipo) {
