@@ -4,9 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.CargoRepository;
+import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
+import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
 public class CargoService {
 
@@ -26,7 +31,30 @@ public class CargoService {
 		
 	}
 	
-
+	public Cargo insert(Cargo obj) {
+		
+		return repository.save(obj);
+		
+	}
+	
+	public void delete(Long id) {
+		
+		try {
+			
+			Cargo obj = findById(id);
+			repository.delete(obj);
+			
+		} catch(EmptyResultDataAccessException e) {
+			
+			throw new ResourceNotFoundException(id);
+			
+		} catch (DataIntegrityViolationException e) {
+			
+			throw new DatabaseException(e.getMessage());
+			
+		}
+	
+	}
 	 
 }
 

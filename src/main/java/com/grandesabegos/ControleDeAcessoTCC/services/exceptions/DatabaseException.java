@@ -1,4 +1,4 @@
-package com.brenomartins.cursospring.services.exceptions;
+package com.grandesabegos.ControleDeAcessoTCC.services.exceptions;
 
 import java.io.Serializable;
 
