@@ -13,7 +13,7 @@ public class AssinanteService extends PessoaService<Assinante> {
 	    }
 	
 	    // regras específicas do assinante
-
+	 
 	 
 }
 

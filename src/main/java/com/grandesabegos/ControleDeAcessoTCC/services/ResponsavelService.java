@@ -13,6 +13,8 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.ResponsavelRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 public class ResponsavelService {
 
 	@Autowired
@@ -56,6 +58,21 @@ public class ResponsavelService {
 	
 	}
 	
+	public Responsavel update(Long id, Responsavel obj) {
+		try {
+			Responsavel entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}	
+	}
+	
+	private void updateData(Responsavel entity, Responsavel obj) {
+		entity.setNome(obj.getNome());
+		entity.setEmails(obj.getEmails());
+		entity.setTelefone(obj.getTelefone());
+	}
 
 	 
 }

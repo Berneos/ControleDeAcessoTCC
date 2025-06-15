@@ -13,6 +13,8 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.CargoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 public class CargoService {
 
 	@Autowired
@@ -54,6 +56,20 @@ public class CargoService {
 			
 		}
 	
+	}
+	
+	public Cargo update(Long id, Cargo obj) {
+		try {
+			Cargo entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}	
+	}
+	
+	private void updateData(Cargo entity, Cargo obj) {
+		entity.setNome(obj.getNome());
 	}
 	 
 }

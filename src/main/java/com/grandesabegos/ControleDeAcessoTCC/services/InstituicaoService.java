@@ -14,6 +14,8 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.InstituicaoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class InstituicaoService {
 
@@ -56,6 +58,22 @@ public class InstituicaoService {
 			
 		}
 	
+	}
+	
+	public Instituicao update(Long id, Instituicao obj) {
+		try {
+			Instituicao entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}	
+	}
+	
+	private void updateData(Instituicao entity, Instituicao obj) {
+		entity.setCnpj(obj.getCnpj());
+		entity.setNome(obj.getNome());
+		entity.setDataCadastro(obj.getDataCadastro());
 	}
 	
 }

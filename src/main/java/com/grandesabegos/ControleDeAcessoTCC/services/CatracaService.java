@@ -13,6 +13,8 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.CatracaRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 public class CatracaService {
 
 	@Autowired
@@ -54,6 +56,20 @@ public class CatracaService {
 			
 		}
 	
+	}
+	
+	public Catraca update(Long id, Catraca obj) {
+		try {
+			Catraca entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}	
+	}
+	
+	private void updateData(Catraca entity, Catraca obj) {
+		entity.setNome(obj.getNome());
 	}
 	 
 }

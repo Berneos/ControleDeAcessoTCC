@@ -116,6 +116,8 @@ public class Instituicao implements Serializable{
 		
 		
 	}
+	
+	
 
 
 	@Override
@@ -134,6 +136,18 @@ public class Instituicao implements Serializable{
 			return false;
 		Instituicao other = (Instituicao) obj;
 		return Objects.equals(cnpj, other.cnpj);
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+	public void setDataCadastro(Instant dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 	
 	

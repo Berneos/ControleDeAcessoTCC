@@ -14,6 +14,8 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.UsuarioRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UsuarioService {
 
@@ -55,6 +57,27 @@ public class UsuarioService {
 			throw new DatabaseException(e.getMessage());
 			
 		}
+	
+	}
+	
+	public Usuario update(Long id, Usuario obj) {
+		try {
+			Usuario entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}	
+	}
+	
+	private void updateData(Usuario entity, Usuario obj) {
+		entity.setNome(obj.getNome());
+		entity.setCpf(obj.getCpf());
+		entity.setEmail(obj.getEmail());
+		entity.setIsAdmin(obj.getIsAdmin());
+		entity.setSenha(obj.getSenha());
+		entity.setTelefone(obj.getTelefone());
+		entity.setUsername(obj.getUsername());
 	
 	}
 	

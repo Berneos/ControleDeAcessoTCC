@@ -9,6 +9,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.DiscriminatorValue;
@@ -19,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -46,8 +48,14 @@ public class Pessoa implements Serializable {
 	protected Instituicao empresa;
 
 	protected String endereco;
-	protected Byte foto;
-	protected Byte biometria; // biometria com id (numero gigante, comparando numeros) e arquivo
+	
+	@Lob
+	@Column(name = "foto")
+	protected byte[] foto;
+	
+	@Lob
+	@Column(name = "biometria")
+	protected byte[] biometria; // biometria com id (numero gigante, comparando numeros) e arquivo
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "pessoa")
@@ -57,7 +65,7 @@ public class Pessoa implements Serializable {
 	}
 
 	public Pessoa(Long id, String nome, String cpf, String telefone, Boolean ativo, Instant dataCadastro,
-			Instituicao empresa, String endereco, Byte foto, Byte biometria) {
+			Instituicao empresa, String endereco, byte[] foto, byte[] biometria) {
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
@@ -134,19 +142,19 @@ public class Pessoa implements Serializable {
 		this.endereco = endereco;
 	}
 
-	public Byte getFoto() {
+	public byte[] getFoto() {
 		return foto;
 	}
 
-	public void setFoto(Byte foto) {
+	public void setFoto(byte[] foto) {
 		this.foto = foto;
 	}
 
-	public Byte getBiometria() {
+	public byte[] getBiometria() {
 		return biometria;
 	}
 
-	public void setBiometria(Byte biometria) {
+	public void setBiometria(byte[] biometria) {
 		this.biometria = biometria;
 	}
 

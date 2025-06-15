@@ -13,6 +13,8 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.SetorRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 public class SetorService {
 
 	@Autowired
@@ -56,7 +58,20 @@ public class SetorService {
 	
 	}
 	
-
+	public Setor update(Long id, Setor obj) {
+		try {
+			Setor entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}	
+	}
+	
+	private void updateData(Setor entity, Setor obj) {
+		entity.setNome(obj.getNome());
+	
+	}
 	 
 }
 
