@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.grandesabegos.ControleDeAcessoTCC.entities.Setor;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.UsuarioRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
@@ -19,66 +19,57 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class UsuarioService {
 
-	@Autowired
-	private UsuarioRepository repository;
-	
-	public List<Usuario> findAll() {
-		
-		return repository.findAll();
-		
-	}
-	
-	public Usuario findById(Long id) {
-		
-		Optional<Usuario> obj = repository.findById(id);
-		return obj.get();
-		
-	}
-	
-	public Usuario insert(Usuario obj) {
-		
-		return repository.save(obj);
-		
-	}
-	
-	public void delete(Long id) {
-		
-		try {
-			
-			Usuario obj = findById(id);
-			repository.delete(obj);
-			
-		} catch(EmptyResultDataAccessException e) {
-			
-			throw new ResourceNotFoundException(id);
-			
-		} catch (DataIntegrityViolationException e) {
-			
-			throw new DatabaseException(e.getMessage());
-			
-		}
-	
-	}
-	
-	public Usuario update(Long id, Usuario obj) {
-		try {
-			Usuario entity = repository.getReferenceById(id);
-			updateData(entity, obj);
-			return repository.save(entity);
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException(id);
-		}	
-	}
-	
-	private void updateData(Usuario entity, Usuario obj) {
-		entity.setNome(obj.getNome());
-		entity.setCpf(obj.getCpf());
-		entity.setEmail(obj.getEmail());
-		entity.setIsAdmin(obj.getIsAdmin());
-		entity.setSenha(obj.getSenha());
-		entity.setTelefone(obj.getTelefone());
-		entity.setUsername(obj.getUsername());
-	
-	}
-	
+    @Autowired
+    private UsuarioRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public List<Usuario> findAll() {
+        return repository.findAll();
+    }
+
+    public Usuario findById(Long id) {
+        Optional<Usuario> obj = repository.findById(id);
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    public Usuario insert(Usuario obj) {
+        obj.setSenha(passwordEncoder.encode(obj.getSenha()));
+        return repository.save(obj);
+    }
+
+    public void delete(Long id) {
+        try {
+            Usuario obj = findById(id);
+            repository.delete(obj);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public Usuario update(Long id, Usuario obj) {
+        try {
+            Usuario entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void updateData(Usuario entity, Usuario obj) {
+        entity.setNome(obj.getNome());
+        entity.setCpf(obj.getCpf());
+        entity.setEmail(obj.getEmail());
+        entity.setIsAdmin(obj.getIsAdmin());
+        entity.setTelefone(obj.getTelefone());
+        entity.setUsername(obj.getUsername());
+
+        if (obj.getSenha() != null && !obj.getSenha().isBlank()) {
+            entity.setSenha(passwordEncoder.encode(obj.getSenha()));
+        }
+    }
 }

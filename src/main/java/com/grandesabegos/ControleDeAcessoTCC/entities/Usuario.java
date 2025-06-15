@@ -42,6 +42,8 @@ public class Usuario implements Serializable{
 	private Instituicao empresa;
 	private String username;
 	private String email;
+	
+	@JsonIgnore
 	private String senha;
 	
 	@JsonIgnore

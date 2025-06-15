@@ -13,6 +13,8 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.AcessoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class AcessoService {
 
@@ -56,8 +58,8 @@ public class AcessoService {
 		}
 		
 		
-		
-		
 	}
+	
+	
 	
 }
