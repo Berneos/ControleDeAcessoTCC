@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.UsuarioRepository;
+import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
@@ -18,12 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Usuario> userOpt = repository.findByUsername(username);
-        Usuario user = userOpt.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        Usuario user = userOpt.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
         
-        return org.springframework.security.core.userdetails.User
-            .withUsername(user.getUsername())
-            .password(user.getSenha())
-            .roles(user.getIsAdmin() ? "ADMIN" : "USER")
-            .build();
+        return new UserDetailsImpl(user);
     }
 }
