@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.grandesabegos.ControleDeAcessoTCC.entities.Assinante;
 
-public interface AssinanteRepository extends JpaRepository<Assinante, Long>{
+public interface AssinanteRepository extends PessoaRepository<Assinante>{
 
 }

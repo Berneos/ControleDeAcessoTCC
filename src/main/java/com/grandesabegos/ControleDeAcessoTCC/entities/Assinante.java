@@ -37,6 +37,12 @@ public class Assinante extends Pessoa {
 		this.dataVencimento = dataVencimento;
 		this.ativo = ativo;
 	}
+	
+	public Assinante(Long id, String nome, String cpf, String telefone, Boolean ativo,
+            Instant dataCadastro, Instituicao empresa, String endereco, byte[] foto, Long biometria) {
+		super(id, nome, cpf, telefone, ativo, dataCadastro, empresa, endereco, foto, biometria);
+		}
+
 
 	public Plano getPlano() {
 		return plano;

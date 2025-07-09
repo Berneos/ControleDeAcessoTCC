@@ -1,5 +1,7 @@
 package com.grandesabegos.ControleDeAcessoTCC.entities;
 
+import java.time.Instant;
+
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -29,6 +31,11 @@ public class Funcionario extends Pessoa {
 		this.cargo = cargo;
 		this.salario = salario;
 	}
+	
+	public Funcionario(Long id, String nome, String cpf, String telefone, Boolean ativo,
+            Instant dataCadastro, Instituicao empresa, String endereco, byte[] foto, Long biometria) {
+		super(id, nome, cpf, telefone, ativo, dataCadastro, empresa, endereco, foto, biometria);
+		}
 
 
 	public Setor getSetor() {return setor;}

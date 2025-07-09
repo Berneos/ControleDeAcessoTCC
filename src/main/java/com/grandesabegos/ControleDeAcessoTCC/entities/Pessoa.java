@@ -55,7 +55,7 @@ public class Pessoa implements Serializable {
 	
 	@Lob
 	@Column(name = "biometria")
-	protected byte[] biometria; // biometria com id (numero gigante, comparando numeros) e arquivo
+	protected Long biometria; // biometria com id (numero gigante, comparando numeros) e arquivo
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "pessoa")
@@ -65,7 +65,7 @@ public class Pessoa implements Serializable {
 	}
 
 	public Pessoa(Long id, String nome, String cpf, String telefone, Boolean ativo, Instant dataCadastro,
-			Instituicao empresa, String endereco, byte[] foto, byte[] biometria) {
+			Instituicao empresa, String endereco, byte[] foto, Long biometria) {
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
@@ -150,11 +150,11 @@ public class Pessoa implements Serializable {
 		this.foto = foto;
 	}
 
-	public byte[] getBiometria() {
+	public Long getBiometria() {
 		return biometria;
 	}
 
-	public void setBiometria(byte[] biometria) {
+	public void setBiometria(Long biometria) {
 		this.biometria = biometria;
 	}
 
