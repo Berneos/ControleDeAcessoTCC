@@ -48,4 +48,7 @@ public class Catraca implements Serializable{
 	public String getNome() {return nome;}
 	public void setNome(String nome) {this.nome = nome;}
 	
+	public Instituicao getEmpresa() {return empresa;}
+	public void setEmpresa(Instituicao empresa) {this.empresa = empresa;}
+	
 }

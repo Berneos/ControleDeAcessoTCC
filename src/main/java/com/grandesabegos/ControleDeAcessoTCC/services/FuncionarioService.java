@@ -1,10 +1,13 @@
 package com.grandesabegos.ControleDeAcessoTCC.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.grandesabegos.ControleDeAcessoTCC.entities.Funcionario;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.FuncionarioRepository;
 
+
+@Service
 public class FuncionarioService extends PessoaService<Funcionario> {
 
 	 @Autowired

@@ -55,6 +55,16 @@ public class Acesso implements Serializable{
 		this.catraca = catraca;
 		this.dataAcesso = dataAcesso;
 	}
+	
+	public Acesso(Long id, Instituicao empresa, Pessoa pessoa, Catraca catraca, Instant dataAcesso) {
+		
+		this.id = id;
+		this.empresa = empresa;
+		this.pessoa = pessoa;
+		this.catraca = catraca;
+		this.dataAcesso = dataAcesso;
+		
+	}
 
 	public Instituicao getEmpresa() {return empresa;}
 	public void setEmpresa(Instituicao empresa) {this.empresa = empresa;}

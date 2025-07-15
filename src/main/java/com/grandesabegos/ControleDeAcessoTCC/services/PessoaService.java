@@ -4,18 +4,29 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.CatracaRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.InstituicaoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.PessoaRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
+@Service
 public abstract class PessoaService<T extends Pessoa> {
 
     @Autowired
     protected PessoaRepository<T> repository;
+    
+    @Autowired
+    private InstituicaoRepository instituicaoRepository;
+    
+    @Autowired
+    private CatracaRepository catracaRepository;
 
     public List<T> findAll() {
         return repository.findAll();
@@ -65,8 +76,13 @@ public abstract class PessoaService<T extends Pessoa> {
         entity.setTelefone(obj.getTelefone());
     }
 
-    public T verificarBiometria(Long biometriaId) {
-        Optional<T> pessoa = repository.findByBiometria(biometriaId);
-        return pessoa.orElse(null);
+    public T verificarBiometriaPorInstituicao(Long biometria, Long instituicaoId) {
+    	
+    	Instituicao inst = instituicaoRepository.findById(instituicaoId)
+    		    .orElseThrow(() -> new ResourceNotFoundException("Instituição não encontrada"));
+
+        return repository.findByBiometriaAndEmpresaId(biometria, instituicaoId)
+            .orElse(null);
     }
+
 }
