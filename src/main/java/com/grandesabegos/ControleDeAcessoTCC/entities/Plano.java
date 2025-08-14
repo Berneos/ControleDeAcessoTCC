@@ -36,6 +36,8 @@ public class Plano implements Serializable {
 	@JoinColumn(name = "empresa_id")
 	private Instituicao empresa;
 	
+	public Plano() {}
+	
 	public Plano(Long id, String nome, Double preco, String descricao, Set<Assinante> assinantes,
 			Instituicao empresa) {
 		super();

@@ -27,6 +27,8 @@ public class Estudante extends Pessoa{
             Instant dataCadastro, Instituicao empresa, String endereco, byte[] foto, Long biometria) {
 		super(id, nome, cpf, telefone, ativo, dataCadastro, empresa, endereco, foto, biometria);
 		}
+	
+	public Estudante() {}
 
 	public Responsavel getResponsavel() {
 		return responsavel;

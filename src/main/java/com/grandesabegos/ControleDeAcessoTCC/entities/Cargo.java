@@ -47,6 +47,8 @@ public class Cargo implements Serializable{
 		this.id = id;
 		this.nome = nome;
 	}
+	
+	public Cargo() {}
 
 	public Long getId() {return id;}
 	public void setId(Long id) {this.id = id;}

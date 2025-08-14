@@ -35,6 +35,8 @@ public class Responsavel implements Serializable{
 		
 	}
 	
+	public Responsavel() {}
+	
 	public Responsavel(String nome, String telefone, String emails, Estudante estudante) {
 		this.nome = nome;
 		this.telefone = telefone;

@@ -32,6 +32,8 @@ public class Funcionario extends Pessoa {
 		this.salario = salario;
 	}
 	
+	public Funcionario() {}
+	
 	public Funcionario(Long id, String nome, String cpf, String telefone, Boolean ativo,
             Instant dataCadastro, Instituicao empresa, String endereco, byte[] foto, Long biometria) {
 		super(id, nome, cpf, telefone, ativo, dataCadastro, empresa, endereco, foto, biometria);
