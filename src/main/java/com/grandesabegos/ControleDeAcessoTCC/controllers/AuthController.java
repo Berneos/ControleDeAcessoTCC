@@ -1,11 +1,20 @@
 package com.grandesabegos.ControleDeAcessoTCC.controllers;
 
-import com.grandesabegos.ControleDeAcessoTCC.dto.LoginRequest;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.grandesabegos.ControleDeAcessoTCC.dto.LoginRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -15,7 +24,7 @@ public class AuthController {
     private AuthenticationManager authManager;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -23,9 +32,16 @@ public class AuthController {
                     request.getPassword()
                 )
             );
-            return "Login realizado com sucesso!";
+            // aqui você poderia gerar token JWT, se houver configuração
+            return ResponseEntity.ok().body(Map.of(
+                "message", "Login realizado com sucesso!"
+            ));
         } catch (AuthenticationException e) {
-            return "Falha no login: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                "error", "Falha no login",
+                "message", e.getMessage()
+            ));
         }
     }
+
 }
