@@ -8,10 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.grandesabegos.ControleDeAcessoTCC.entities.*;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Estudante;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Funcionario;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Setor;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
-import com.grandesabegos.ControleDeAcessoTCC.repositories.*;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.CargoRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.EstudanteRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.FuncionarioRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.InstituicaoRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.PessoaPadraoRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.SetorRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.UsuarioRepository;
 
 @Configuration
 @Profile("test")
@@ -34,6 +47,12 @@ public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private CargoRepository cargoRepository;
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder; // importante para criptografar a senha
 
     @Override
     public void run(String... args) throws Exception {
@@ -103,5 +122,34 @@ public class TestConfig implements CommandLineRunner {
                 i1, "Rua das Oliveiras, 50", null, 2001L);
 
         estudanteRepository.saveAll(Set.of(e1));
+        
+     // --- USUÁRIOS ---
+        Usuario u1 = new Usuario(
+                null,
+                "Administrador Sistema",
+                "11111111111",
+                "11911111111",
+                true,
+                now,
+                i3, // vinculado à empresa Tech Solutions
+                "admin",
+                "admin@empresa.com",
+                passwordEncoder.encode("123456") // senha criptografada
+        );
+
+        Usuario u2 = new Usuario(
+                null,
+                "Usuário Comum",
+                "22222222222",
+                "11922222222",
+                false,
+                now,
+                i1, // vinculado à Escola Estadual
+                "user",
+                "user@escola.com",
+                passwordEncoder.encode("123456")
+        );
+
+        usuarioRepository.saveAll(Set.of(u1, u2));
     }
 }

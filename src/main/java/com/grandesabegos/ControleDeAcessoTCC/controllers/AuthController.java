@@ -1,7 +1,5 @@
 package com.grandesabegos.ControleDeAcessoTCC.controllers;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.grandesabegos.ControleDeAcessoTCC.dto.LoginRequest;
+import com.grandesabegos.ControleDeAcessoTCC.dto.LoginResponse;
+import com.grandesabegos.ControleDeAcessoTCC.security.JwtUtil;
+import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsImpl;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,21 +28,31 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             Authentication authentication = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    request.getUsername(),
-                    request.getPassword()
-                )
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
             );
-            // aqui você poderia gerar token JWT, se houver configuração
-            return ResponseEntity.ok().body(Map.of(
-                "message", "Login realizado com sucesso!"
-            ));
+
+            // Recupera UserDetails autenticado
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            // Gera token JWT
+            String token = JwtUtil.gerarToken(userDetails.getUsername());
+
+            // Cria DTO de resposta
+            LoginResponse response = new LoginResponse(
+                    token,
+                    userDetails.getUsername(),
+                    userDetails.getAuthorities().iterator().next().getAuthority(),
+                    "Login realizado com sucesso!"
+            );
+
+            return ResponseEntity.ok(response);
+
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                "error", "Falha no login",
-                "message", e.getMessage()
-            ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse(null, null, null, "Falha no login: " + e.getMessage()));
         }
     }
-
 }

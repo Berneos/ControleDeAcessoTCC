@@ -50,6 +50,8 @@ public class Usuario implements Serializable{
 	@OneToMany(mappedBy = "usuario")
 	private Set<Acesso> acessos = new HashSet<>();
 	
+	public Usuario() {}
+	
 	public Usuario(Long id, String nome, String cpf, String telefone, Boolean isAdmin, Instant dataCadastro, Instituicao empresa,
 			String username, String email, String senha) {
 		super();
