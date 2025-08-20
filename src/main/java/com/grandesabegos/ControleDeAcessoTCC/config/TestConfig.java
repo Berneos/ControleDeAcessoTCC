@@ -90,27 +90,27 @@ public class TestConfig implements CommandLineRunner {
 
         // --- PESSOAS GENÉRICAS ---
         Pessoa p1 = new Pessoa(null, "Carlos da Silva", "11122233344", "11999999999", true, now,
-                i1, "Rua das Flores, 123", null, 1001L);
+                i1, "Rua das Flores, 123", null, "abugbogweobwgawgoabuwgaobuçwgaboçgwabou");
         Pessoa p2 = new Pessoa(null, "Maria Oliveira", "55566677788", "11988888888", true, now,
-                i2, "Av. Central, 456", null, 1002L);
+                i2, "Av. Central, 456", null, "aggbowçboiuwagbouiwgabuoiwga");
 
         pessoaPadraoRepository.saveAll(Set.of(p1, p2));
 
         // --- FUNCIONÁRIOS ---
         Funcionario f1 = new Funcionario(null, "João Souza", "99988877766", "11977777777", true, now,
-                i3, "Rua Alpha, 999", null, 1003L);
+                i3, "Rua Alpha, 999", null, "agiongoawniwanogiwgnioawganio");
         f1.setSalario(3500.0);
         f1.setSetor(setorTI);
         f1.setCargo(cargoDev);
 
         Funcionario f2 = new Funcionario(null, "Ana Lima", "22233344455", "11966666666", true, now,
-                i3, "Av. Beta, 111", null, 1004L);
+                i3, "Av. Beta, 111", null, "wgãnpwniggwnaiwngawgoin");
         f2.setSalario(4200.0);
         f2.setSetor(setorRH);
         f2.setCargo(cargoAnalistaRH);
 
         Funcionario f3 = new Funcionario(null, "Pedro Santos", "33344455566", "11955555555", true, now,
-                i3, "Rua Gama, 12", null, 1005L);
+                i3, "Rua Gama, 12", null, "GNWIANIWGAPNIOWAGNIPOWGAINPOWAG");
         f3.setSalario(2800.0);
         f3.setSetor(setorSeg);
         f3.setCargo(cargoVigilante);
@@ -119,7 +119,7 @@ public class TestConfig implements CommandLineRunner {
 
         // --- ESTUDANTES ---
         Estudante e1 = new Estudante(null, "Lucas Pereira", "44455566677", "11944444444", true, now,
-                i1, "Rua das Oliveiras, 50", null, 2001L);
+                i1, "Rua das Oliveiras, 50", null, "ONGAONIWAGOINWAGNIOAGWIONWGA");
 
         estudanteRepository.saveAll(Set.of(e1));
         

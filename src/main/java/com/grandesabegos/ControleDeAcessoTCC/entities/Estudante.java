@@ -24,7 +24,7 @@ public class Estudante extends Pessoa{
 	}
 	
 	public Estudante(Long id, String nome, String cpf, String telefone, Boolean ativo,
-            Instant dataCadastro, Instituicao empresa, String endereco, byte[] foto, Long biometria) {
+            Instant dataCadastro, Instituicao empresa, String endereco, byte[] foto, String biometria) {
 		super(id, nome, cpf, telefone, ativo, dataCadastro, empresa, endereco, foto, biometria);
 		}
 	

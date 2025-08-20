@@ -12,7 +12,7 @@ public class PessoaDTO {
     private Long empresaId; // ID da instituição associada
     private String endereco;
     private byte[] foto;
-    private Long biometria;
+    private String biometria;
 
     public PessoaDTO() {}
 
@@ -90,11 +90,11 @@ public class PessoaDTO {
         this.foto = foto;
     }
 
-    public Long getBiometria() {
+    public String getBiometria() {
         return biometria;
     }
 
-    public void setBiometria(Long biometria) {
+    public void setBiometria(String biometria) {
         this.biometria = biometria;
     }
 }

@@ -76,7 +76,7 @@ public abstract class PessoaService<T extends Pessoa> {
         entity.setTelefone(obj.getTelefone());
     }
 
-    public T verificarBiometriaPorInstituicao(Long biometria, Long instituicaoId) {
+    public T verificarBiometriaPorInstituicao(String biometria, Long instituicaoId) {
     	
     	Instituicao inst = instituicaoRepository.findById(instituicaoId)
     		    .orElseThrow(() -> new ResourceNotFoundException("Instituição não encontrada"));

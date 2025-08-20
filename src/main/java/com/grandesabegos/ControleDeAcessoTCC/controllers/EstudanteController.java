@@ -58,7 +58,7 @@ public class EstudanteController {
     // GET /estudantes/verificar?biometria=123456789&instituicaoId=10
  	@GetMapping("/verificar")
  	public ResponseEntity<String> verificarBiometria(
- 	        @RequestParam Long biometria,
+ 	        @RequestParam String biometria,
  	        @RequestParam Long instituicaoId) {
 
  		Estudante estudante = service.verificarBiometriaPorInstituicao(biometria, instituicaoId);
