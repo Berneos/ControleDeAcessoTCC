@@ -48,6 +48,15 @@ public class Plano implements Serializable {
 		this.assinantes = assinantes;
 		this.empresa = empresa;
 	}
+	
+	public Plano(Long id, String nome, Double preco, String descricao, Instituicao empresa) {
+	    this.id = id;
+	    this.nome = nome;
+	    this.preco = preco;
+	    this.descricao = descricao;
+	    this.empresa = empresa;
+	}
+	
 	public Long getId() {return id;}
 	public void setId(Long id) {this.id = id;}
 	

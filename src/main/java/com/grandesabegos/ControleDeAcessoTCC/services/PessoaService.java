@@ -36,6 +36,8 @@ public abstract class PessoaService<T extends Pessoa> {
         Optional<T> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
+    
+ 
 
     public T insert(T obj) {
         return repository.save(obj);

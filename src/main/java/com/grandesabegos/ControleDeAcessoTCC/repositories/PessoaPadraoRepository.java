@@ -5,4 +5,4 @@ import org.springframework.stereotype.Repository;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 
 @Repository
-public interface PessoaPadraoRepository extends PessoaRepository<Pessoa>,JpaSpecificationExecutor<Pessoa> {}
+public interface PessoaPadraoRepository extends PessoaRepository<Pessoa>{}

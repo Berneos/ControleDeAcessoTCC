@@ -9,7 +9,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 
 @NoRepositoryBean // Impede que o Spring tente instanciar diretamente
-public interface PessoaRepository<T extends Pessoa> extends JpaRepository<T, Long> {
+public interface PessoaRepository<T extends Pessoa> extends JpaRepository<T, Long>, JpaSpecificationExecutor<T> {
     Optional<T> findByBiometriaAndEmpresaId(String biometria, Long empresaId); // empresaId é o id da instituição
 }
 

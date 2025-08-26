@@ -1,6 +1,7 @@
 package com.grandesabegos.ControleDeAcessoTCC.config;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,19 +11,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Assinante;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Estudante;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Funcionario;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Plano;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Setor;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.AssinanteRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.CargoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.EstudanteRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.FuncionarioRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.InstituicaoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.PessoaPadraoRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.PlanoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.SetorRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.UsuarioRepository;
 
@@ -50,6 +55,12 @@ public class TestConfig implements CommandLineRunner {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private PlanoRepository planoRepository;
+    
+    @Autowired
+    private AssinanteRepository assinanteRepository;
     
     @Autowired
     private PasswordEncoder passwordEncoder; // importante para criptografar a senha
@@ -151,5 +162,31 @@ public class TestConfig implements CommandLineRunner {
         );
 
         usuarioRepository.saveAll(Set.of(u1, u2));
+        
+        
+        Plano planoBasico = new Plano(null, "Básico", 99.90, "Acesso livre durante horário comercial", new HashSet<>(), i2);
+        Plano planoPremium = new Plano(null, "Premium", 199.90, "Acesso 24h + aulas especiais", new HashSet<>(), i2);
+        Plano planoAnual = new Plano(null, "Anual", 999.00, "Plano anual com desconto", new HashSet<>(), i2);
+        
+        planoRepository.saveAll(Set.of(planoBasico, planoPremium, planoAnual));
+        
+        
+        Assinante a1 = new Assinante(null, "Rafael Costa", "77788899900", "11933334444", true,
+                now, i2, "Rua do Treino, 321", null, "BIO123456");
+        a1.setPlano(planoBasico);
+        a1.setDataVencimento(now.plus(30, ChronoUnit.DAYS)); // 30 dias
+
+        Assinante a2 = new Assinante(null, "Juliana Mendes", "11144477722", "11922223333", true,
+                now, i2, "Av. Saúde, 654", null, "BIO654321");
+        a2.setPlano(planoPremium);
+        a2.setDataVencimento(now.plus(60, ChronoUnit.DAYS)); // 60 dias
+
+        Assinante a3 = new Assinante(null, "Paulo Henrique", "55566677788", "11955556666", false,
+                now, i2, "Rua Fechada, 12", null, "BIO987654");
+        a3.setPlano(planoAnual);
+        a3.setDataVencimento(now.minus(15, ChronoUnit.DAYS)); // vencido
+
+        assinanteRepository.saveAll(Set.of(a1, a2, a3));
+
     }
 }
