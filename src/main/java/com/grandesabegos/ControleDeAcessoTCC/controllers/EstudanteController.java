@@ -1,17 +1,29 @@
 package com.grandesabegos.ControleDeAcessoTCC.controllers;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
-import com.grandesabegos.ControleDeAcessoTCC.entities.Assinante;
-import com.grandesabegos.ControleDeAcessoTCC.entities.Estudante;
-import com.grandesabegos.ControleDeAcessoTCC.services.AssinanteService;
-import com.grandesabegos.ControleDeAcessoTCC.services.EstudanteService;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.grandesabegos.ControleDeAcessoTCC.dto.EstudanteFilterDTO;
+import com.grandesabegos.ControleDeAcessoTCC.dto.EstudanteMinDTO;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Estudante;
+import com.grandesabegos.ControleDeAcessoTCC.services.EstudanteService;
 
 @RestController
 @RequestMapping(value = "/estudantes")
@@ -25,6 +37,8 @@ public class EstudanteController {
         List<Estudante> lista = service.findAll();
         return ResponseEntity.ok().body(lista);
     }
+    
+    
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Estudante> findById(@PathVariable Long id) {
@@ -69,4 +83,30 @@ public class EstudanteController {
  	        return ResponseEntity.status(403).body("NEGADO");
  	    }
  	}
+ 	
+ 	@GetMapping("/filtrar")
+ 	public ResponseEntity<Page<EstudanteMinDTO>> filtrar(
+ 	        @RequestParam(required = false) String nome,
+ 	        @RequestParam(required = false) String cpf,
+ 	        @RequestParam(required = false) Boolean ativo,
+ 	        @RequestParam(required = false) Long empresaId,
+ 	        @RequestParam(required = false) String responsavelNome,
+ 	        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+ 	        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
+ 	        Pageable pageable) {
+
+ 	    EstudanteFilterDTO filtro = new EstudanteFilterDTO();
+ 	    filtro.setNome(nome);
+ 	    filtro.setCpf(cpf);
+ 	    filtro.setAtivo(ativo);
+ 	    filtro.setEmpresaId(empresaId);
+ 	    filtro.setResponsavelNome(responsavelNome);
+ 	    filtro.setDataInicio(dataInicio);
+ 	    filtro.setDataFim(dataFim);
+
+ 	    Page<EstudanteMinDTO> page = service.filtrarEstudantes(filtro, pageable);
+ 	    return ResponseEntity.ok(page);
+ 	}
+
+
 }

@@ -20,7 +20,8 @@ public class EstudanteMinDTO {
 		ativo = entity.getAtivo();
 		dataCadastro = entity.getDataCadastro();
 		telefone = entity.getTelefone();
-		responsavelNome = entity.getResponsavel().getNome();
+		this.responsavelNome =
+	            entity.getResponsavel() != null ? entity.getResponsavel().getNome() : null;
 	}
 
 	public Long getId() {return id;}

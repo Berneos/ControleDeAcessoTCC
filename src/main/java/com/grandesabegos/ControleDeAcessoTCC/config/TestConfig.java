@@ -18,6 +18,7 @@ import com.grandesabegos.ControleDeAcessoTCC.entities.Funcionario;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Plano;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Responsavel;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Setor;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
@@ -28,6 +29,7 @@ import com.grandesabegos.ControleDeAcessoTCC.repositories.FuncionarioRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.InstituicaoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.PessoaPadraoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.PlanoRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.ResponsavelRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.SetorRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.UsuarioRepository;
 
@@ -64,6 +66,9 @@ public class TestConfig implements CommandLineRunner {
     
     @Autowired
     private PasswordEncoder passwordEncoder; // importante para criptografar a senha
+    
+    @Autowired
+    private ResponsavelRepository responsavelRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -132,8 +137,12 @@ public class TestConfig implements CommandLineRunner {
         Estudante e1 = new Estudante(null, "Lucas Pereira", "44455566677", "11944444444", true, now,
                 i1, "Rua das Oliveiras, 50", null, "ONGAONIWAGOINWAGNIOAGWIONWGA");
 
-        estudanteRepository.saveAll(Set.of(e1));
         
+        Responsavel r1 = new Responsavel("Jubileu", "11949357107", "jubileu@gmail.com", e1);
+        e1.setResponsavel(r1);
+        responsavelRepository.saveAll(Set.of(r1));
+        estudanteRepository.saveAll(Set.of(e1));
+
      // --- USUÁRIOS ---
         Usuario u1 = new Usuario(
                 null,
