@@ -1,19 +1,23 @@
 package com.grandesabegos.ControleDeAcessoTCC.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.grandesabegos.ControleDeAcessoTCC.dto.AcessoFilterDTO;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.AcessoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
-
-import jakarta.persistence.EntityNotFoundException;
+import com.grandesabegos.ControleDeAcessoTCC.specifications.AcessoSpecifications;
 
 @Service
 public class AcessoService {
@@ -21,11 +25,9 @@ public class AcessoService {
 	@Autowired
 	private AcessoRepository repository;
 	
-	public List<Acesso> findAll() {
-		
-		return repository.findAll();
-		
-	}
+	public Page<AcessoFilterDTO> findAllPaged(Pageable pageable) {
+        return repository.findAll(pageable).map(AcessoFilterDTO::new);
+    }
 	
 	public Acesso findById(Long id) {
 		
@@ -59,6 +61,20 @@ public class AcessoService {
 		
 		
 	}
+	
+	public Page<AcessoFilterDTO> filtrar(Long empresaId, Long pessoaId, Long usuarioId, Long catracaId,
+            LocalDate inicio, LocalDate fim, Pageable pageable) {
+
+		Specification<Acesso> spec = Specification
+		.where(AcessoSpecifications.empresaIdIgual(empresaId))
+		.and(AcessoSpecifications.pessoaIdIgual(pessoaId))
+		.and(AcessoSpecifications.usuarioIdIgual(usuarioId))
+		.and(AcessoSpecifications.catracaIdIgual(catracaId))
+		.and(AcessoSpecifications.dataEntre(inicio, fim));
+		
+		return repository.findAll(spec, pageable).map(AcessoFilterDTO::new);
+	}
+
 	
 	
 	

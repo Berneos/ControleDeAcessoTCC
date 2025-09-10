@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Assinante;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Catraca;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Estudante;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Funcionario;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
@@ -22,8 +24,10 @@ import com.grandesabegos.ControleDeAcessoTCC.entities.Responsavel;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Setor;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.AcessoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.AssinanteRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.CargoRepository;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.CatracaRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.EstudanteRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.FuncionarioRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.InstituicaoRepository;
@@ -70,6 +74,12 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private ResponsavelRepository responsavelRepository;
 
+    @Autowired
+    private CatracaRepository catracaRepository;
+
+    @Autowired
+    private AcessoRepository acessoRepository;
+    
     @Override
     public void run(String... args) throws Exception {
 
@@ -197,5 +207,56 @@ public class TestConfig implements CommandLineRunner {
 
         assinanteRepository.saveAll(Set.of(a1, a2, a3));
 
+     // --- CATRACAS ---
+        Catraca c1 = new Catraca(null, "Entrada Principal Escola", i1);
+        Catraca c2 = new Catraca(null, "Academia - Portão 1", i2);
+        Catraca c3 = new Catraca(null, "Tech Solutions - Recepção", i3);
+        Catraca c4 = new Catraca(null, "Alpha Tower - Entrada", i4);
+
+        catracaRepository.saveAll(Set.of(c1, c2, c3, c4));
+
+        // --- ACESSOS ---
+        // Pessoa genérica Carlos passando pela escola
+        Acesso ac1 = new Acesso(
+                null,
+                i1,
+                p1,      // Carlos
+                u2,      // Usuário comum registrou
+                c1,      // catraca da escola
+                now.minus(5, ChronoUnit.DAYS)
+        );
+
+        // Pessoa genérica Maria passando pela academia
+        Acesso ac2 = new Acesso(
+                null,
+                i2,
+                p2,      // Maria
+                u1,      // Administrador registrou
+                c2,      // catraca da academia
+                now.minus(3, ChronoUnit.DAYS)
+        );
+
+        // Funcionário João (Dev) entrando na empresa
+        Acesso ac3 = new Acesso(
+                null,
+                i3,
+                f1,      // João
+                u1,
+                c3,      // catraca da empresa
+                now.minus(1, ChronoUnit.DAYS)
+        );
+
+        // Estudante Lucas entrando na escola hoje
+        Acesso ac4 = new Acesso(
+                null,
+                i1,
+                e1,      // Lucas
+                u2,
+                c1,
+                now
+        );
+
+        acessoRepository.saveAll(Set.of(ac1, ac2, ac3, ac4));
+        
     }
 }

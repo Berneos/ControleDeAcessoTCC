@@ -42,6 +42,15 @@ public class Catraca implements Serializable{
 		this.nome = nome;
 	}
 	
+	public Catraca(Long id, String nome, Instituicao empresa) {
+		
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.empresa = empresa;
+		
+	}
+	
 	public Catraca() {}
 
 	public Long getId() {return id;}
