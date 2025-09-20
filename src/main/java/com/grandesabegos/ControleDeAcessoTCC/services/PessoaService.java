@@ -86,5 +86,12 @@ public abstract class PessoaService<T extends Pessoa> {
         return repository.findByBiometriaAndEmpresaId(biometria, instituicaoId)
             .orElse(null);
     }
+    
+    public List<Pessoa> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
+    }
+
+
+
 
 }

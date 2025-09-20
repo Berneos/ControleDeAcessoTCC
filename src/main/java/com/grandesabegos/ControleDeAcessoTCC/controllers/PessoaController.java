@@ -54,7 +54,7 @@ public class PessoaController {
 
     @PutMapping(value = "/id/{id}")
     public ResponseEntity<Pessoa> update(@PathVariable Long id, @RequestBody Pessoa obj) {
-        obj.setId(id); // garantir que o ID correto seja usado
+        obj.setId(id);
         Pessoa updated = service.update(id, obj);
         return ResponseEntity.ok().body(updated);
     }
@@ -80,20 +80,26 @@ public class PessoaController {
         }
     }
 
-    // Novo endpoint com filtros e ordenação
-    // Exemplo: GET /pessoas/filtrar?nome=joao&ativo=true&dataInicio=2025-01-01&dataFim=2025-08-31&page=0&size=10&sort=nome,asc
+    // GET /pessoas/filtrar?nome=joao&ativo=true&dataInicio=2025-01-01&dataFim=2025-08-31&page=0&size=10&sort=nome,asc
     @GetMapping("/filtrar")
     public ResponseEntity<Page<Pessoa>> filtrar(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) Boolean ativo,
-            @RequestParam(required = false) 
+            @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
-            @RequestParam(required = false) 
+            @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
             Pageable pageable) {
 
         Page<Pessoa> resultado = service.filtrar(nome, ativo, dataInicio, dataFim, pageable);
         return ResponseEntity.ok().body(resultado);
     }
-   
+
+    // GET /pessoas/empresa/{empresaId}
+    @GetMapping("/empresa/{empresaId}")
+    public ResponseEntity<List<Pessoa>> findByEmpresaId(@PathVariable Long empresaId) {
+        List<Pessoa> pessoas = service.findByEmpresaId(empresaId);
+        return ResponseEntity.ok().body(pessoas);
+    }
+
 }
