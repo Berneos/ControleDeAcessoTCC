@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Plano;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.PlanoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
@@ -76,6 +77,8 @@ public class PlanoService {
 		entity.setPreco(obj.getPreco());
 	}
 	
-	
+	public List<Plano> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
+    }
 }
 

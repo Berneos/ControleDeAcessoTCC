@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.grandesabegos.ControleDeAcessoTCC.dto.AcessoFilterDTO;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.services.AcessoService;
 
 @RestController
@@ -73,7 +74,12 @@ public class AcessoController {
 	    return ResponseEntity.ok(page);
 	}
 
-	
+	// GET /acessos/empresa/{empresaId}
+    @GetMapping("/empresa/{empresaId}")
+    public ResponseEntity<List<Acesso>> findByEmpresaId(@PathVariable Long empresaId) {
+        List<Acesso> acessos = service.findByEmpresaId(empresaId);
+        return ResponseEntity.ok().body(acessos);
+    }
 	
 	
 }

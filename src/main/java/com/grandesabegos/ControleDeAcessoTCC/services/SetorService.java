@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Responsavel;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Setor;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.SetorRepository;
@@ -75,5 +76,8 @@ public class SetorService {
 	
 	}
 	 
+	public List<Setor> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
+    }
 }
 

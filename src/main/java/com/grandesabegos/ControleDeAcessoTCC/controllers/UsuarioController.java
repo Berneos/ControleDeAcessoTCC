@@ -3,6 +3,7 @@ package com.grandesabegos.ControleDeAcessoTCC.controllers;
 import java.net.URI;
 import java.util.List;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.services.UsuarioService;
 
@@ -58,5 +59,12 @@ public class UsuarioController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+    
+ // GET /usuarios/empresa/{empresaId}
+    @GetMapping("/empresa/{empresaId}")
+    public ResponseEntity<List<Usuario>> findByEmpresaId(@PathVariable Long empresaId) {
+        List<Usuario> usuarios = service.findByEmpresaId(empresaId);
+        return ResponseEntity.ok().body(usuarios);
     }
 }

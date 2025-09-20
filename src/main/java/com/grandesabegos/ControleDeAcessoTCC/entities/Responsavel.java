@@ -47,6 +47,8 @@ public class Responsavel implements Serializable{
 		this.estudante = estudante;
 	}
 
+	
+	
 	public String getNome() {
 		return nome;
 	}
@@ -77,6 +79,14 @@ public class Responsavel implements Serializable{
 
 	public void setEstudante(Estudante estudante) {
 		this.estudante = estudante;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 }

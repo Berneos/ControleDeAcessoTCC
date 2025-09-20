@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Plano;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Responsavel;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.ResponsavelRepository;
@@ -76,6 +77,8 @@ public class ResponsavelService {
 		entity.setTelefone(obj.getTelefone());
 	}
 
-	 
+	public List<Responsavel> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
+    }
 }
 

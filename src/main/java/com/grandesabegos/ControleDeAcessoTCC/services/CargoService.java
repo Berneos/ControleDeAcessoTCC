@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.CargoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
@@ -74,5 +75,8 @@ public class CargoService {
 		entity.setNome(obj.getNome());
 	}
 	 
+	public List<Cargo> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
+    }
 }
 

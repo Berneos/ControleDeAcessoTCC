@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.grandesabegos.ControleDeAcessoTCC.dto.AcessoFilterDTO;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.AcessoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
@@ -74,7 +75,9 @@ public class AcessoService {
 		
 		return repository.findAll(spec, pageable).map(AcessoFilterDTO::new);
 	}
-
+	public List<Acesso> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
+    }
 	
 	
 	

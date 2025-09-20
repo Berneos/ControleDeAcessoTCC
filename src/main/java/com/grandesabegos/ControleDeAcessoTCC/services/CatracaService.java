@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Catraca;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.CatracaRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
@@ -74,5 +75,9 @@ public class CatracaService {
 		entity.setNome(obj.getNome());
 	}
 	 
+	public List<Catraca> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
+    }
+	
 }
 

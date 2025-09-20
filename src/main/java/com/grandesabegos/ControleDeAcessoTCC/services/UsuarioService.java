@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.UsuarioRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
@@ -71,5 +72,8 @@ public class UsuarioService {
         if (obj.getSenha() != null && !obj.getSenha().isBlank()) {
             entity.setSenha(passwordEncoder.encode(obj.getSenha()));
         }
+    }
+    public List<Usuario> findByEmpresaId(Long empresaId) {
+        return repository.findByEmpresaId(empresaId);
     }
 }
