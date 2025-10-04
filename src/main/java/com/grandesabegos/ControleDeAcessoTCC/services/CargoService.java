@@ -6,14 +6,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.grandesabegos.ControleDeAcessoTCC.entities.Acesso;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
-import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.CargoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.DatabaseException;
 import com.grandesabegos.ControleDeAcessoTCC.services.exceptions.ResourceNotFoundException;
+import com.grandesabegos.ControleDeAcessoTCC.specifications.CargoSpecifications;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -77,6 +79,14 @@ public class CargoService {
 	 
 	public List<Cargo> findByEmpresaId(Long empresaId) {
         return repository.findByEmpresaId(empresaId);
+    }
+	
+	public Page<Cargo> filtrar(String nome, Long setorId, Pageable pageable) {
+        Specification<Cargo> spec = Specification
+                .where(CargoSpecifications.nomeContem(nome))
+                .and(CargoSpecifications.setorIdIgual(setorId));
+
+        return repository.findAll(spec, pageable);
     }
 }
 

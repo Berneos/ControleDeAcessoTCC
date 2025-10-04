@@ -10,6 +10,6 @@ import com.grandesabegos.ControleDeAcessoTCC.entities.Setor;
 public interface SetorRepository extends JpaRepository<Setor, Long>{
 
     List<Setor> findByEmpresaId(Long empresaId);
-
+    
 	
 }
