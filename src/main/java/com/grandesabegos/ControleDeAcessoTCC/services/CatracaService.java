@@ -79,5 +79,10 @@ public class CatracaService {
         return repository.findByEmpresaId(empresaId);
     }
 	
+	public List<Catraca> findByNome(String nome) {
+	    return repository.findByNomeContainingIgnoreCase(nome);
+	}
+
+	
 }
 

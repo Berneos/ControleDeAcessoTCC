@@ -64,4 +64,11 @@ public class CatracaController {
         List<Catraca> catracas = service.findByEmpresaId(empresaId);
         return ResponseEntity.ok().body(catracas);
     }
+    
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<Catraca>> filtrarPorNome(@org.springframework.web.bind.annotation.RequestParam String nome) {
+        List<Catraca> catracas = service.findByNome(nome);
+        return ResponseEntity.ok().body(catracas);
+    }
+
 }
