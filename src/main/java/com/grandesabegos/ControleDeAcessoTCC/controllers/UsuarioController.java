@@ -3,18 +3,27 @@ package com.grandesabegos.ControleDeAcessoTCC.controllers;
 import java.net.URI;
 import java.util.List;
 
-import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
-import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
-import com.grandesabegos.ControleDeAcessoTCC.services.UsuarioService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
+import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsImpl;
+import com.grandesabegos.ControleDeAcessoTCC.services.UsuarioService;
+
 @RestController
-@RequestMapping(value = "/usuarios")
+@RequestMapping("/api/usuarios") // base correta
 public class UsuarioController {
 
     @Autowired
@@ -25,46 +34,52 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<Usuario>> findAll() {
-        List<Usuario> lista = service.findAll();
-        return ResponseEntity.ok().body(lista);
+        return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Usuario> findById(@PathVariable Long id) {
-        Usuario obj = service.findById(id);
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> insert(@RequestBody Usuario obj) {
-        // Criptografa a senha antes de salvar
-        obj.setSenha(passwordEncoder.encode(obj.getSenha()));
-        obj = service.insert(obj);
+    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario,
+                                                @RequestParam(required = false) Long empresaId,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Usuario autenticado = userDetails.getUsuario();
+
+        if (!autenticado.getIsMaster() && autenticado.getIsAdmin()) {
+            empresaId = autenticado.getEmpresa().getId();
+        }
+
+        if (!autenticado.getIsMaster() && !autenticado.getIsAdmin()) {
+            return ResponseEntity.status(403).build();
+        }
+
+        Usuario criado = service.criarUsuario(autenticado, usuario, empresaId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+                    .path("/{id}")
+                    .buildAndExpand(criado.getId())
+                    .toUri();
+        return ResponseEntity.created(uri).body(criado);
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody Usuario obj) {
-        // Criptografa a nova senha, se fornecida
         if (obj.getSenha() != null && !obj.getSenha().isBlank()) {
             obj.setSenha(passwordEncoder.encode(obj.getSenha()));
         }
-        obj = service.update(id, obj);
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.ok(service.update(id, obj));
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
-    
- // GET /usuarios/empresa/{empresaId}
+
     @GetMapping("/empresa/{empresaId}")
     public ResponseEntity<List<Usuario>> findByEmpresaId(@PathVariable Long empresaId) {
-        List<Usuario> usuarios = service.findByEmpresaId(empresaId);
-        return ResponseEntity.ok().body(usuarios);
+        return ResponseEntity.ok(service.findByEmpresaId(empresaId));
     }
 }

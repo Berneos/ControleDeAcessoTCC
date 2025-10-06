@@ -43,6 +43,8 @@ public class Usuario implements Serializable{
 	private String username;
 	private String email;
 	
+	private Boolean isMaster = false; // false por padrão
+	
 	@JsonIgnore
 	private String senha;
 	
@@ -99,6 +101,9 @@ public class Usuario implements Serializable{
 	public int hashCode() {
 		return Objects.hash(cpf, email, empresa, isAdmin);
 	}
+	
+	public Boolean getIsMaster() { return isMaster; }
+	public void setIsMaster(Boolean isMaster) { this.isMaster = isMaster; }
 
 	@Override
 	public boolean equals(Object obj) {

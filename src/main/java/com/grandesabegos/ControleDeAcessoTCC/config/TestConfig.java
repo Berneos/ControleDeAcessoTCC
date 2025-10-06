@@ -166,6 +166,21 @@ public class TestConfig implements CommandLineRunner {
                 "admin@empresa.com",
                 passwordEncoder.encode("123456") // senha criptografada
         );
+        
+        Usuario master = new Usuario(
+                null,
+                "Master Sistema",
+                "00011122233",
+                "11900011122",
+                true, // isAdmin = true (também é admin)
+                now,
+                i3,
+                "master",
+                "master@sistema.com",
+                passwordEncoder.encode("123456")
+        );
+        master.setIsMaster(true); // 🔑 usuário master
+
 
         Usuario u2 = new Usuario(
                 null,
@@ -180,7 +195,7 @@ public class TestConfig implements CommandLineRunner {
                 passwordEncoder.encode("123456")
         );
 
-        usuarioRepository.saveAll(Set.of(u1, u2));
+        usuarioRepository.saveAll(Set.of(master,u1, u2));
         
         
         Plano planoBasico = new Plano(null, "Básico", 99.90, "Acesso livre durante horário comercial", new HashSet<>(), i2);
