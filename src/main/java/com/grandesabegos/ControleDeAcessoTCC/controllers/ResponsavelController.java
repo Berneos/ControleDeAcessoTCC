@@ -58,10 +58,9 @@ public class ResponsavelController {
         return ResponseEntity.ok().body(obj);
     }
     
- // GET /responsaveis/empresa/{empresaId}
-    @GetMapping("/empresa/{empresaId}")
-    public ResponseEntity<List<Responsavel>> findByEmpresaId(@PathVariable Long empresaId) {
-        List<Responsavel> responsaveis = service.findByEmpresaId(empresaId);
+    @GetMapping("/estudante/{estudanteNome}")
+    public ResponseEntity<List<Responsavel>> findByEstudanteNome(@PathVariable String estudanteNome) {
+        List<Responsavel> responsaveis = service.findByEstudanteNome(estudanteNome);
         return ResponseEntity.ok().body(responsaveis);
     }
 }

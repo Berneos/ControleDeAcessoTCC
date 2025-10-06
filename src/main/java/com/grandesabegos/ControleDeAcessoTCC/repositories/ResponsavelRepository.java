@@ -9,7 +9,7 @@ import com.grandesabegos.ControleDeAcessoTCC.entities.Responsavel;
 
 public interface ResponsavelRepository extends JpaRepository<Responsavel, Long>{
 
-    List<Responsavel> findByEmpresaId(Long empresaId);
+	List<Responsavel> findByEstudante_Nome(String nome);
 
 	
 }

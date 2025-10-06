@@ -10,10 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import com.grandesabegos.ControleDeAcessoTCC.security.JwtFilter;
 import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsServiceImpl;
 
 @Configuration
@@ -22,10 +24,12 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -44,9 +48,18 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // 🔓 libera tudo no modo teste
+                // rotas públicas
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/cargos/**").permitAll()
+                .requestMatchers("/catracas/**").permitAll()
+                .requestMatchers("/responsaveis/**").permitAll()
+                // todas as outras rotas exigem autenticação
+                .anyRequest().authenticated()
             )
-            .httpBasic(httpBasic -> {}); // mantém configurado, mas sem bloqueio
+            .httpBasic(httpBasic -> {});
+
+        // registra o filtro JWT antes do UsernamePasswordAuthenticationFilter
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

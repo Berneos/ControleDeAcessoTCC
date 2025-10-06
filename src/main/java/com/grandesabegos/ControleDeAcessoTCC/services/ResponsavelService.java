@@ -77,8 +77,9 @@ public class ResponsavelService {
 		entity.setTelefone(obj.getTelefone());
 	}
 
-	public List<Responsavel> findByEmpresaId(Long empresaId) {
-        return repository.findByEmpresaId(empresaId);
-    }
+	public List<Responsavel> findByEstudanteNome(String nome) {
+	    return repository.findByEstudante_Nome(nome);
+	}
+
 }
 

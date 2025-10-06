@@ -9,7 +9,7 @@ import com.grandesabegos.ControleDeAcessoTCC.entities.Cargo;
 
 public interface CargoRepository extends JpaRepository<Cargo, Long>, JpaSpecificationExecutor<Cargo>{
 
-    List<Cargo> findByEmpresaId(Long empresaId);
+	List<Cargo> findBySetor_Id(Long setorId);
 
 	
 }

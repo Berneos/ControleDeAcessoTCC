@@ -77,8 +77,8 @@ public class CargoService {
 		entity.setNome(obj.getNome());
 	}
 	 
-	public List<Cargo> findByEmpresaId(Long empresaId) {
-        return repository.findByEmpresaId(empresaId);
+	public List<Cargo> findByEmpresaId(Long setorId) {
+        return repository.findBySetor_Id(setorId);
     }
 	
 	public Page<Cargo> filtrar(String nome, Long setorId, Pageable pageable) {
