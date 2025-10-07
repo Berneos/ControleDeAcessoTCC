@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -82,4 +83,10 @@ public class UsuarioController {
     public ResponseEntity<List<Usuario>> findByEmpresaId(@PathVariable Long empresaId) {
         return ResponseEntity.ok(service.findByEmpresaId(empresaId));
     }
+    
+    @GetMapping("/me")
+    public ResponseEntity<?> me(Authentication authentication) {
+        return ResponseEntity.ok(authentication);
+    }
+
 }

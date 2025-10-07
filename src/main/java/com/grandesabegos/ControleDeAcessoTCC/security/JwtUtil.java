@@ -1,9 +1,12 @@
 package com.grandesabegos.ControleDeAcessoTCC.security;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.JwtException;
@@ -19,11 +22,15 @@ public class JwtUtil {
     private final long EXPIRATION_MS = 1000 * 60 * 60; // 1 hora
 
     public static String gerarToken(String usuario) {
+        Instant now = Instant.now();
         return Jwts.builder()
-                .subject(usuario)
-                .signWith(SECRET_KEY)
-                .compact();
+            .subject(usuario)
+            .setIssuedAt(Date.from(now))
+            .setExpiration(Date.from(now.plusSeconds(3600))) // 1 hora
+            .signWith(SECRET_KEY)
+            .compact();
     }
+
 
     public String getUsername(String token) {
         return Jwts.parser()
@@ -34,15 +41,18 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         try {
-            Jwts.parser()
-                .verifyWith(SECRET_KEY)
-                .build()
-                .parseSignedClaims(token);
+            String username = getUsername(token);
+            if (!username.equals(userDetails.getUsername())) {
+                return false;
+            }
+            // Se tiver data de expiração, checar isso
+            // extractClaims(token).getExpiration() > now etc
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
+
 }
