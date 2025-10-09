@@ -12,7 +12,6 @@ import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
-
     private final Usuario usuario;
 
     public UserDetailsImpl(Usuario usuario) {
@@ -21,11 +20,15 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (Boolean.TRUE.equals(usuario.getIsAdmin())) {
+        if (Boolean.TRUE.equals(usuario.getIsMaster())) {
+            return Collections.singleton(new SimpleGrantedAuthority("ROLE_MASTER"));
+        } else if (Boolean.TRUE.equals(usuario.getIsAdmin())) {
             return Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
         }
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
     }
+
 
     @Override
     public String getPassword() {
@@ -39,12 +42,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Você pode customizar isso se quiser controle de expiração
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Pode alterar se quiser controle de bloqueio
+        return true;
     }
 
     @Override
@@ -54,10 +57,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true; // Ou usar um campo tipo `ativo`
+        return true;
     }
 
-    // Método extra para acessar o usuário original
     public Usuario getUsuario() {
         return usuario;
     }

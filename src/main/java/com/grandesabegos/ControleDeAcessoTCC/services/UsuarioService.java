@@ -44,24 +44,56 @@ public class UsuarioService {
         return repository.save(obj);
     }
 
-    public void delete(Long id) {
+    // --- Atualizado para aceitar empresaId e validar permissões ---
+    public Usuario update(Usuario usuarioLogado, Long id, Usuario obj, Long empresaId) {
+        try {
+            Usuario entity = repository.getReferenceById(id);
+
+            // Validação de permissão por empresa
+            if (!Boolean.TRUE.equals(usuarioLogado.getIsMaster())) {
+                if (Boolean.TRUE.equals(usuarioLogado.getIsAdmin())) {
+                    // Admin só pode atualizar usuários da própria empresa
+                    if (!usuarioLogado.getEmpresa().getId().equals(empresaId)) {
+                        throw new SecurityException("Admin só pode atualizar usuários da própria empresa.");
+                    }
+                    entity.setEmpresa(usuarioLogado.getEmpresa());
+                } else {
+                    throw new SecurityException("Usuário não tem permissão para atualizar usuários.");
+                }
+            } else if (empresaId != null) {
+                // Master pode mudar a empresa do usuário
+                Instituicao empresa = instituicaoRepository.findById(empresaId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada: " + empresaId));
+                entity.setEmpresa(empresa);
+            }
+
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    // --- Atualizado para aceitar empresaId e validar permissões ---
+    public void delete(Usuario usuarioLogado, Long id, Long empresaId) {
         try {
             Usuario obj = findById(id);
+
+            if (!Boolean.TRUE.equals(usuarioLogado.getIsMaster())) {
+                if (Boolean.TRUE.equals(usuarioLogado.getIsAdmin())) {
+                    if (!usuarioLogado.getEmpresa().getId().equals(empresaId)) {
+                        throw new SecurityException("Admin só pode deletar usuários da própria empresa.");
+                    }
+                } else {
+                    throw new SecurityException("Usuário não tem permissão para deletar usuários.");
+                }
+            }
+
             repository.delete(obj);
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    public Usuario update(Long id, Usuario obj) {
-        try {
-            Usuario entity = repository.getReferenceById(id);
-            updateData(entity, obj);
-            return repository.save(entity);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
         }
     }
 
@@ -77,11 +109,12 @@ public class UsuarioService {
             entity.setSenha(passwordEncoder.encode(obj.getSenha()));
         }
     }
+
     public List<Usuario> findByEmpresaId(Long empresaId) {
         return repository.findByEmpresaId(empresaId);
     }
     
- // --- Criar empresa ---
+    // --- Criar empresa ---
     public Instituicao criarEmpresa(Usuario usuarioLogado, Instituicao novaEmpresa) {
         if (!Boolean.TRUE.equals(usuarioLogado.getIsMaster())) {
             throw new SecurityException("Apenas usuário master pode criar empresas.");
@@ -95,10 +128,8 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada: " + empresaId));
 
         if (Boolean.TRUE.equals(usuarioLogado.getIsMaster())) {
-            // Master pode criar usuário em qualquer empresa
             novoUsuario.setEmpresa(empresa);
         } else if (Boolean.TRUE.equals(usuarioLogado.getIsAdmin())) {
-            // Admin só pode criar usuários na própria empresa
             if (!usuarioLogado.getEmpresa().getId().equals(empresaId)) {
                 throw new SecurityException("Admin só pode criar usuários para a própria empresa.");
             }
@@ -107,9 +138,7 @@ public class UsuarioService {
             throw new SecurityException("Usuário não tem permissão para criar novos usuários.");
         }
 
-        // Criptografa senha
         novoUsuario.setSenha(passwordEncoder.encode(novoUsuario.getSenha()));
         return repository.save(novoUsuario);
     }
-
 }

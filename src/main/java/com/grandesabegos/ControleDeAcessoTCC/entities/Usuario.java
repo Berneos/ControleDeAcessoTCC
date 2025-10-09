@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +46,7 @@ public class Usuario implements Serializable{
 	
 	private Boolean isMaster = false; // false por padrão
 	
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String senha;
 	
 	@JsonIgnore
@@ -66,6 +67,24 @@ public class Usuario implements Serializable{
 		this.empresa = empresa;
 		this.username = username;
 		this.email = email;
+		this.senha = senha;
+	}
+	
+	
+
+	public Usuario(Long id, String nome, String cpf, String telefone, Boolean isAdmin, Instant dataCadastro,
+			Instituicao empresa, String username, String email, Boolean isMaster, String senha) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.telefone = telefone;
+		this.isAdmin = isAdmin;
+		this.dataCadastro = dataCadastro;
+		this.empresa = empresa;
+		this.username = username;
+		this.email = email;
+		this.isMaster = isMaster;
 		this.senha = senha;
 	}
 

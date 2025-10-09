@@ -24,7 +24,7 @@ import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsImpl;
 import com.grandesabegos.ControleDeAcessoTCC.services.UsuarioService;
 
 @RestController
-@RequestMapping("/api/usuarios") // base correta
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     @Autowired
@@ -44,46 +44,72 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario,
-                                                @RequestParam(required = false) Long empresaId,
-                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario,
+                                          @RequestParam(required = false) Long empresaId,
+                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         Usuario autenticado = userDetails.getUsuario();
 
-        if (!autenticado.getIsMaster() && autenticado.getIsAdmin()) {
+        // 🔒 Permissões básicas
+        if (!Boolean.TRUE.equals(autenticado.getIsMaster()) && !Boolean.TRUE.equals(autenticado.getIsAdmin())) {
+            return ResponseEntity.status(403).body("Usuário não tem permissão para criar novos usuários.");
+        }
+
+        // 🔐 Validação da senha
+        if (usuario.getSenha() == null || usuario.getSenha().isBlank()) {
+            return ResponseEntity.badRequest().body("A senha é obrigatória para criar um novo usuário.");
+        }
+
+        // Define empresa automaticamente para Admin (não Master)
+        if (!Boolean.TRUE.equals(autenticado.getIsMaster()) && Boolean.TRUE.equals(autenticado.getIsAdmin())) {
             empresaId = autenticado.getEmpresa().getId();
         }
 
-        if (!autenticado.getIsMaster() && !autenticado.getIsAdmin()) {
-            return ResponseEntity.status(403).build();
-        }
-
         Usuario criado = service.criarUsuario(autenticado, usuario, empresaId);
+
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(criado.getId())
-                    .toUri();
+                .path("/{id}")
+                .buildAndExpand(criado.getId())
+                .toUri();
+
         return ResponseEntity.created(uri).body(criado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody Usuario obj) {
-        if (obj.getSenha() != null && !obj.getSenha().isBlank()) {
-            obj.setSenha(passwordEncoder.encode(obj.getSenha()));
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @RequestBody Usuario obj,
+                                    @RequestParam(required = false) Long empresaId,
+                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        Usuario autenticado = userDetails.getUsuario();
+
+        // 🔒 Verifica se o usuário é ADMIN ou MASTER
+        if (!Boolean.TRUE.equals(autenticado.getIsAdmin()) && !Boolean.TRUE.equals(autenticado.getIsMaster())) {
+            return ResponseEntity.status(403).body("Você não tem permissão para alterar usuários.");
         }
-        return ResponseEntity.ok(service.update(id, obj));
+
+        Usuario atualizado = service.update(autenticado, id, obj, empresaId);
+
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+                                       @RequestParam(required = false) Long empresaId,
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        Usuario autenticado = userDetails.getUsuario();
+        service.delete(autenticado, id, empresaId);
+
         return ResponseEntity.noContent().build();
     }
+
 
     @GetMapping("/empresa/{empresaId}")
     public ResponseEntity<List<Usuario>> findByEmpresaId(@PathVariable Long empresaId) {
         return ResponseEntity.ok(service.findByEmpresaId(empresaId));
     }
-    
+
     @GetMapping("/me")
     public ResponseEntity<?> me(Authentication authentication) {
         return ResponseEntity.ok(authentication);

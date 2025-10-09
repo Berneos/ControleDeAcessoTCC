@@ -48,16 +48,23 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> {})
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 👈 JWT é stateless
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // login liberado
+                // Rotas públicas
+                .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/cargos/**").permitAll()
                 .requestMatchers("/catracas/**").permitAll()
                 .requestMatchers("/responsaveis/**").permitAll()
-                .anyRequest().authenticated() // todo o resto precisa de token
+
+                // Rotas restritas
+                .requestMatchers("/api/usuarios/**").hasAnyRole("ADMIN", "MASTER")
+                .requestMatchers("/api/empresas/**").hasRole("MASTER") // Somente o master pode criar empresas
+
+                // Tudo o resto precisa estar autenticado
+                .anyRequest().authenticated()
             );
 
-        // registra o filtro JWT antes do UsernamePasswordAuthenticationFilter
+        // Adiciona o filtro JWT
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
