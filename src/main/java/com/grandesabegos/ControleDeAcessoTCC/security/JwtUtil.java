@@ -6,9 +6,11 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -16,43 +18,55 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "umaChaveMuitoGrandeParaSeguranca123456789"; 
-    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+    // ✅ injeta o valor do application.properties ou variável de ambiente
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-    private final long EXPIRATION_MS = 1000 * 60 * 60; // 1 hora
+    @Value("${jwt.expiration}")
+    private long jwtExpirationMs;
 
-    public static String gerarToken(String usuario) {
+    private SecretKey getSecretKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    // ✅ gera token com tempo de expiração dinâmico
+    public String gerarToken(String username) {
         Instant now = Instant.now();
         return Jwts.builder()
-            .subject(usuario)
-            .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plusSeconds(3600))) // 1 hora
-            .signWith(SECRET_KEY)
-            .compact();
+                .subject(username)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusMillis(jwtExpirationMs)))
+                .signWith(getSecretKey())
+                .compact();
     }
 
-
+    // ✅ extrai o username (subject) do token
     public String getUsername(String token) {
-        return Jwts.parser()
-                .verifyWith(SECRET_KEY)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+        return getClaims(token).getSubject();
     }
 
+    // ✅ valida o token
     public boolean validateToken(String token, UserDetails userDetails) {
         try {
-            String username = getUsername(token);
-            if (!username.equals(userDetails.getUsername())) {
-                return false;
-            }
-            // Se tiver data de expiração, checar isso
-            // extractClaims(token).getExpiration() > now etc
-            return true;
+            final String username = getUsername(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
+    // ✅ método auxiliar para ler claims (payload)
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    // ✅ checa se o token está expirado
+    private boolean isTokenExpired(String token) {
+        Date expiration = getClaims(token).getExpiration();
+        return expiration.before(new Date());
+    }
 }

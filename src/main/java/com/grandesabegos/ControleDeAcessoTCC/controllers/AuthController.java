@@ -24,6 +24,9 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authManager;
 
+    @Autowired
+    private JwtUtil jwtUtil; // ✅ injeta a instância configurada com @Value
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
@@ -37,8 +40,8 @@ public class AuthController {
             // Recupera UserDetails autenticado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            // Gera token JWT
-            String token = JwtUtil.gerarToken(userDetails.getUsername());
+            // ✅ Gera token JWT usando a instância injetada
+            String token = jwtUtil.gerarToken(userDetails.getUsername());
 
             // Cria DTO de resposta
             LoginResponse response = new LoginResponse(
