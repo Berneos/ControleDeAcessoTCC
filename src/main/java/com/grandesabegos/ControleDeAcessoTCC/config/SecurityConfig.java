@@ -74,12 +74,13 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("*"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
+        config.addAllowedOriginPattern("*"); // ✅ aceita qualquer domínio
+        config.addAllowedHeader("*"); // ✅ aceita todos os headers
+        config.addAllowedMethod("*"); // ✅ aceita todos os métodos (GET, POST, etc.)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
+
 }
