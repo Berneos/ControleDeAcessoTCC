@@ -42,6 +42,7 @@ public class AuthController {
 
             // ✅ Gera token JWT usando a instância injetada
             String token = jwtUtil.gerarToken(userDetails.getUsername());
+            
 
             // Cria DTO de resposta
             LoginResponse response = new LoginResponse(

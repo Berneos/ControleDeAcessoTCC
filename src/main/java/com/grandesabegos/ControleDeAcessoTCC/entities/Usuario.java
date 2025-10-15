@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -82,6 +83,22 @@ public class Usuario implements Serializable{
 		this.isAdmin = isAdmin;
 		this.dataCadastro = dataCadastro;
 		this.empresa = empresa;
+		this.username = username;
+		this.email = email;
+		this.isMaster = isMaster;
+		this.senha = senha;
+	}
+
+	public Usuario(Object object, String string, String string2, String string3, boolean b, Instant now,
+			Optional<Instituicao> byId, String string4, String string5, String encode) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.telefone = telefone;
+		this.isAdmin = isAdmin;
+		this.dataCadastro = dataCadastro;
+		empresa = byId.get();
 		this.username = username;
 		this.email = email;
 		this.isMaster = isMaster;

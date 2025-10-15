@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +20,16 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
     // ✅ injeta o valor do application.properties ou variável de ambiente
-	@Value("${jwt.secret}")
+	@Value("${jwt-secret}")
 	private String jwtSecret;
+	
 
-	@Value("${jwt.expiration}")
+	@Value("${jwt-expiration}")
 	private long jwtExpirationMs;
 
 
     private SecretKey getSecretKey() {
+    	System.out.println(jwtSecret);
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 

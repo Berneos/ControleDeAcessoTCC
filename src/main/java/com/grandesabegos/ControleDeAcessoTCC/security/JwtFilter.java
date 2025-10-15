@@ -10,8 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsServiceImpl;
-
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,31 +26,23 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
         final String header = request.getHeader("Authorization");
         String username = null;
         String token = null;
-
         if (header != null && header.startsWith("Bearer ")) {
             token = header.substring(7);
-            username = jwtUtil.getUsername(token);
-        }
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if (jwtUtil.validateToken(token,userDetails)) {
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            try {
+                username = jwtUtil.getUsername(token);
+            } catch (JwtException e) {
+                logger.warn("Token inválido ignorado para esta requisição: {}");
+                // Não defina username e continue
             }
         }
-
-        filterChain.doFilter(request, response);
+        if (username != null && jwtUtil.validateToken(token, userDetailsService.loadUserByUsername(username))) {
+            // Configuração de autenticação...
+        }
+        filterChain.doFilter(request, response);  // Sempre prossiga
     }
 }

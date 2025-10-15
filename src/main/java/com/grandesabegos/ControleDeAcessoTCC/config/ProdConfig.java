@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -28,43 +29,16 @@ public class ProdConfig implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${jwt-secret}")
+	private String jwtSecret;
+    
     @Override
     public void run(String... args) throws Exception {
 
-        Instant now = Instant.now();
 
-        // --- INSTITUIÇÃO INICIAL ---
-        Instituicao matriz = new Instituicao(
-                null,
-                "Instituição Matriz",
-                "00000000000001",
-                now,
-                new HashSet<>(), // setores
-                new HashSet<>(), // usuários
-                new HashSet<>(), // planos
-                new HashSet<>(), // assinantes
-                Tipo.Empresa
-        );
-
-        instituicaoRepository.save(matriz);
-
-        // --- USUÁRIO MASTER ---
-        Usuario master = new Usuario(
-                null,
-                "Master do Sistema",
-                "00011122233",
-                "11900011122",
-                true,
-                now,
-                matriz,
-                "master",
-                "master@sistema.com",
-                passwordEncoder.encode("senhaMaster123") // 🔑 coloque uma senha segura
-        );
-        master.setIsMaster(true); // define como master
-
-        usuarioRepository.save(master);
 
         System.out.println("💻 Configuração PROD inicial carregada: Instituição + Usuário Master");
+        System.out.println("Secret é:" + jwtSecret);
+        
     }
 }
