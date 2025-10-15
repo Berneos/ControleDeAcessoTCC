@@ -19,10 +19,10 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
     // ✅ injeta o valor do application.properties ou variável de ambiente
-    @Value("${jwt.secret}")
+    @Value("${JWT_SECRET}")
     private String jwtSecret;
 
-    @Value("${jwt.expiration}")
+    @Value("${JWT_EXPIRATION}")
     private long jwtExpirationMs;
 
     private SecretKey getSecretKey() {
