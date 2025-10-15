@@ -27,7 +27,12 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+	
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	    <java.version>17</java.version>
+
+
 	</properties>
 	<dependencies>
     <dependency>
@@ -78,11 +83,29 @@
         <version>0.12.6</version>
         <scope>runtime</scope>
     </dependency>
+    <dependency>
+	    <groupId>org.postgresql</groupId>
+	    <artifactId>postgresql</artifactId>
+	    <scope>runtime</scope>
+	</dependency>
+
     
 </dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-resources-plugin</artifactId>
+			    <version>3.3.1</version>
+			    <configuration>
+			        <delimiters>
+			            <delimiter>@</delimiter>
+			        </delimiters>
+			        <useDefaultDelimiters>false</useDefaultDelimiters>
+			    </configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
