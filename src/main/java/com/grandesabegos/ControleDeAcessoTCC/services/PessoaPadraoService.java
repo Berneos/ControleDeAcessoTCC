@@ -1,5 +1,6 @@
 package com.grandesabegos.ControleDeAcessoTCC.services;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 import org.springframework.data.domain.Page;
@@ -7,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.grandesabegos.ControleDeAcessoTCC.dto.PessoaCreateDTO;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
+import com.grandesabegos.ControleDeAcessoTCC.repositories.InstituicaoRepository;
 import com.grandesabegos.ControleDeAcessoTCC.repositories.PessoaPadraoRepository;
 
 import jakarta.persistence.criteria.Predicate;
@@ -16,9 +20,11 @@ import jakarta.persistence.criteria.Predicate;
 public class PessoaPadraoService extends PessoaService<Pessoa> {
     
     private final PessoaPadraoRepository repository;
+    private final InstituicaoRepository instituicaoRepo;
 
-    public PessoaPadraoService(PessoaPadraoRepository repository) {
+    public PessoaPadraoService(PessoaPadraoRepository repository, InstituicaoRepository instituicaoRepo) {
         this.repository = repository;
+		this.instituicaoRepo = instituicaoRepo;
     }
 
     public Page<Pessoa> filtrar(
@@ -52,5 +58,27 @@ public class PessoaPadraoService extends PessoaService<Pessoa> {
 
         return repository.findAll(spec, pageable);
     }
+    
+    public Pessoa insertFromDto(PessoaCreateDTO dto) {
+        Long empresaId = dto.getEmpresaId();
+        if (empresaId == null) {
+            throw new IllegalArgumentException("empresaId é obrigatório.");
+        }
+
+        Instituicao empresa = instituicaoRepo.findById(empresaId)
+            .orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada: " + empresaId));
+
+        Pessoa p = new Pessoa();
+        p.setNome(dto.getNome());
+        p.setCpf(dto.getCpf());
+        p.setTelefone(dto.getTelefone());
+        p.setBiometria(dto.getBiometria());
+        p.setAtivo(dto.getAtivo() == null ? Boolean.TRUE : dto.getAtivo());
+        p.setDataCadastro(dto.getDataCadastro() == null ? Instant.now() : dto.getDataCadastro());
+        p.setEmpresa(empresa);
+
+        return repository.save(p);
+    }
+
 
 }

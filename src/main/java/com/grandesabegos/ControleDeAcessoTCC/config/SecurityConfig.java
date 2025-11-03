@@ -1,9 +1,11 @@
 package com.grandesabegos.ControleDeAcessoTCC.config;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,21 +22,19 @@ import com.grandesabegos.ControleDeAcessoTCC.security.JwtFilter;
 import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsServiceImpl;
 
 @Configuration
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder, JwtFilter jwtFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtFilter = jwtFilter;
     }
 
+    // ✅ AuthenticationManager
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
         AuthenticationManagerBuilder authManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authManagerBuilder
@@ -43,40 +43,53 @@ public class SecurityConfig {
         return authManagerBuilder.build();
     }
 
+    // ✅ SecurityFilterChain configurado com base nos papéis
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> {})
+            .cors(cors -> {}) // usa o CorsFilter configurado abaixo
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Rotas públicas
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/cargos/**").permitAll()
-                .requestMatchers("/catracas/**").permitAll()
-                .requestMatchers("/responsaveis/**").permitAll()
+                // Rotas públicas (sem autenticação)
+                .requestMatchers(
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/auth/**",
+                    "/usuarios/registrar",
+                    "/usuarios/login"
+                ).permitAll()
 
-                // Rotas restritas
-                .requestMatchers("/api/usuarios/**").hasAnyRole("ADMIN", "MASTER")
-                .requestMatchers("/api/empresas/**").hasRole("MASTER") // Somente o master pode criar empresas
+                // 👤 Usuários comuns: podem gerenciar apenas pessoas
+                .requestMatchers("/api/pessoas/**", "/pessoas/**").hasAnyRole("USER", "ADMIN", "MASTER")
 
-                // Tudo o resto precisa estar autenticado
+                // 👮 Admins: podem gerenciar usuários e pessoas
+                .requestMatchers("/api/usuarios/**", "/usuarios/**").hasAnyRole("ADMIN", "MASTER")
+
+                // 👑 Masters: podem gerenciar empresas
+                .requestMatchers("/api/empresas/**", "/empresas/**").hasRole("MASTER")
+
+                // Qualquer outra requisição exige autenticação
                 .anyRequest().authenticated()
             );
 
-        // Adiciona o filtro JWT
+        // Adiciona o filtro JWT antes do filtro padrão de autenticação
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    // ✅ Configuração global de CORS
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*"); // ✅ aceita qualquer domínio
-        config.addAllowedHeader("*"); // ✅ aceita todos os headers
-        config.addAllowedMethod("*"); // ✅ aceita todos os métodos (GET, POST, etc.)
+        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.addExposedHeader("Authorization");
+        config.addExposedHeader("Content-Disposition");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

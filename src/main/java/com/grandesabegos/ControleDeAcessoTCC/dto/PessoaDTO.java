@@ -2,7 +2,10 @@ package com.grandesabegos.ControleDeAcessoTCC.dto;
 
 import java.time.Instant;
 
+import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
+
 public class PessoaDTO {
+	private Long id;
     private String tipo; // ex: "ASSINANTE", "FUNCIONARIO", etc.
     private String nome;
     private String cpf;
@@ -11,16 +14,16 @@ public class PessoaDTO {
     private Instant dataCadastro;
     private Long empresaId; // ID da instituição associada
     private String endereco;
-    private byte[] foto;
-    private String biometria;
+
 
     public PessoaDTO() {}
 
     // Getters e Setters
 
-    public String getTipo() {
-        return tipo;
+    public Tipo getTipo() { 
+        return Tipo.valueOf(tipo);
     }
+
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
@@ -82,19 +85,5 @@ public class PessoaDTO {
         this.endereco = endereco;
     }
 
-    public byte[] getFoto() {
-        return foto;
-    }
-
-    public void setFoto(byte[] foto) {
-        this.foto = foto;
-    }
-
-    public String getBiometria() {
-        return biometria;
-    }
-
-    public void setBiometria(String biometria) {
-        this.biometria = biometria;
-    }
+ 
 }

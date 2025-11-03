@@ -31,7 +31,9 @@ public class InstituicaoMinDTO {
 
 	public Instant getDataCadastro() {return dataCadastro;}
 
-	public String getTipo() {return tipo;}
+	public Tipo getTipo() { 
+	    return Tipo.valueOf(tipo);
+	}
 	
 	
 	

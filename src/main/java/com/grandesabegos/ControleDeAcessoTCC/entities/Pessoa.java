@@ -9,11 +9,13 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,12 +51,12 @@ public class Pessoa implements Serializable {
 
 	protected String endereco;
 	
-	@Lob
 	@Column(name = "foto")
+	@Basic(fetch = FetchType.LAZY)
 	protected byte[] foto;
 	
-	@Lob
 	@Column(name = "biometria")
+	@Basic(fetch = FetchType.LAZY)
 	protected String biometria; // biometria com id (numero gigante, comparando numeros) e arquivo
 
 	@JsonIgnore

@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.grandesabegos.ControleDeAcessoTCC.dto.UsuarioCreateDTO;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Usuario;
 import com.grandesabegos.ControleDeAcessoTCC.security.UserDetailsImpl;
 import com.grandesabegos.ControleDeAcessoTCC.services.UsuarioService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -44,28 +47,41 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario,
-                                          @RequestParam(required = false) Long empresaId,
-                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> criarUsuario(
+            @RequestBody @Valid UsuarioCreateDTO dto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         Usuario autenticado = userDetails.getUsuario();
 
-        // 🔒 Permissões básicas
+        // Permissões básicas
         if (!Boolean.TRUE.equals(autenticado.getIsMaster()) && !Boolean.TRUE.equals(autenticado.getIsAdmin())) {
             return ResponseEntity.status(403).body("Usuário não tem permissão para criar novos usuários.");
         }
 
-        // 🔐 Validação da senha
-        if (usuario.getSenha() == null || usuario.getSenha().isBlank()) {
+        // Validação senha — o @Valid já cobre, mas checamos mesmo assim
+        if (dto.getSenha() == null || dto.getSenha().isBlank()) {
             return ResponseEntity.badRequest().body("A senha é obrigatória para criar um novo usuário.");
         }
 
-        // Define empresa automaticamente para Admin (não Master)
+        // Se Admin (não Master), força empresaId para a empresa do autenticado
+        Long empresaId = dto.getEmpresaId();
         if (!Boolean.TRUE.equals(autenticado.getIsMaster()) && Boolean.TRUE.equals(autenticado.getIsAdmin())) {
             empresaId = autenticado.getEmpresa().getId();
         }
 
-        Usuario criado = service.criarUsuario(autenticado, usuario, empresaId);
+        // Monta entidade Usuario a partir do DTO (sem associar empresa)
+        Usuario novo = new Usuario();
+        novo.setNome(dto.getNome());
+        novo.setCpf(dto.getCpf());
+        novo.setTelefone(dto.getTelefone());
+        novo.setIsAdmin(dto.getIsAdmin());   // supondo que seu entity tem esses campos booleanos
+        novo.setIsMaster(dto.getIsMaster());
+        novo.setUsername(dto.getUsername());
+        novo.setEmail(dto.getEmail());
+        novo.setSenha(dto.getSenha()); // service vai codificar
+
+        // chama service (seu service já tinha: criarUsuario(autenticado, usuario, empresaId))
+        Usuario criado = service.criarUsuario(autenticado, novo, empresaId);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -74,6 +90,7 @@ public class UsuarioController {
 
         return ResponseEntity.created(uri).body(criado);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,

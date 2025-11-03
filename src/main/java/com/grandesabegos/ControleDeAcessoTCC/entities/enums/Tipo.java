@@ -7,21 +7,21 @@ public enum Tipo {
 	Academia(3),
 	EdificioComercial(4);
 	
-	private int code;
+	private Integer code;
 	
-	private Tipo(int code) {
+	private Tipo(Integer code) {
 		
 		this.code = code;
 		
 	}
 	
-	public int getCode() {
+	public Integer getCode() {
 		
 		return code;
 		
 	}
 	
-	public static Tipo valueOf(int code) {
+	public static Tipo valueOf(Integer code) {
 		
 		for(Tipo tipo : Tipo.values()) {
 			

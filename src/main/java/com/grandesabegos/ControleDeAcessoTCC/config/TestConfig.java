@@ -218,7 +218,7 @@ public class TestConfig implements CommandLineRunner {
         Assinante a3 = new Assinante(null, "Paulo Henrique", "55566677788", "11955556666", false,
                 now, i2, "Rua Fechada, 12", null, "BIO987654");
         a3.setPlano(planoAnual);
-        a3.setDataVencimento(now.minus(15, ChronoUnit.DAYS)); // vencido
+        a3.setDataVencimento(now.minus(15, ChronoUnit.DAYS)); // 
 
         assinanteRepository.saveAll(Set.of(a1, a2, a3));
 

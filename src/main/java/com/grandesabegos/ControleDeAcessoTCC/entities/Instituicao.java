@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
 
 import jakarta.persistence.Entity;
@@ -16,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,6 +31,7 @@ public class Instituicao implements Serializable{
 	private String nome;
 	private String cnpj;
 	
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant dataCadastro;
 	
@@ -110,7 +113,10 @@ public class Instituicao implements Serializable{
 
 	public Optional<Set<Plano>> getPlanos() {return Optional.ofNullable(planos);}
 
-	public Tipo getTipo() {return Tipo.valueOf(tipo);}
+	public Tipo getTipo() {
+	    return this.tipo == null ? null : Tipo.valueOf(this.tipo);
+	}
+
 	public void setTipo(Tipo tipo) {
 	
 		if(tipo != null) {
@@ -152,6 +158,13 @@ public class Instituicao implements Serializable{
 	public void setDataCadastro(Instant dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
+	@PrePersist
+	public void prePersist() {
+	    if (this.dataCadastro == null) {
+	        this.dataCadastro = Instant.now();
+	    }
+	}
+
 	
 	
 
