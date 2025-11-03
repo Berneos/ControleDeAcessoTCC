@@ -179,7 +179,7 @@ public class TestConfig implements CommandLineRunner {
                 "master@sistema.com",
                 passwordEncoder.encode("123456")
         );
-        master.setIsMaster(true); // 🔑 usuário master
+        master.setIsMaster(true); // 🔑 usuário 
 
 
         Usuario u2 = new Usuario(
