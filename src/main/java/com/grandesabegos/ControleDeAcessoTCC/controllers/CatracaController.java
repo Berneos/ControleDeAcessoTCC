@@ -2,6 +2,7 @@ package com.grandesabegos.ControleDeAcessoTCC.controllers;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.grandesabegos.ControleDeAcessoTCC.dto.CatracaCreateDTO;
 import com.grandesabegos.ControleDeAcessoTCC.entities.Catraca;
-import com.grandesabegos.ControleDeAcessoTCC.entities.Pessoa;
+import com.grandesabegos.ControleDeAcessoTCC.entities.Instituicao;
 import com.grandesabegos.ControleDeAcessoTCC.services.CatracaService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/catracas")
@@ -39,11 +43,26 @@ public class CatracaController {
     }
 
     @PostMapping
-    public ResponseEntity<Catraca> insert(@RequestBody Catraca obj) {
-        obj = service.insert(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<?> insert(@Valid @RequestBody CatracaCreateDTO dto) {
+        if (dto.getEmpresaId() == null) {
+            return ResponseEntity.badRequest().body(Map.of("erro", "empresaId é obrigatório."));
+        }
+
+        Catraca catraca = new Catraca();
+        catraca.setNome(dto.getNome());
+
+        Instituicao empresa = new Instituicao();
+        empresa.setId(dto.getEmpresaId());
+        catraca.setEmpresa(empresa);
+
+        Catraca created = service.insert(catraca);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(created.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(new CatracaCreateDTO(created));
     }
 
     @DeleteMapping(value = "/{id}")
