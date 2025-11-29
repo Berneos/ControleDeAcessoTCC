@@ -6,12 +6,12 @@ import com.grandesabegos.ControleDeAcessoTCC.entities.enums.Tipo;
 
 public class PessoaDTO {
 	private Long id;
-    private String tipo; // ex: "ASSINANTE", "FUNCIONARIO", etc.
     private String nome;
     private String cpf;
     private String telefone;
     private Boolean ativo;
     private Instant dataCadastro;
+    private Integer  tipo; // ex: "ASSINANTE", "FUNCIONARIO", etc.
     private Long empresaId; // ID da instituição associada
     private String endereco;
 
@@ -25,7 +25,7 @@ public class PessoaDTO {
     }
 
 
-    public void setTipo(String tipo) {
+    public void setTipo(Integer  tipo) {
         this.tipo = tipo;
     }
 
