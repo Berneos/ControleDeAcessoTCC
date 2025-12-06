@@ -133,8 +133,13 @@ Como o sistema completo não está hospedado:
 
 ### **Karina Rangel**
 
--   📱 11 11 98929-8505\
+-   📱 11 98929-8505\
 -   🔗 Email: karina.rangel247@gmail.com
+-   💻 Responsável pela catraca
+
+### **Luisa Bonelli**
+
+-   📱 11 97495-5197\
 -   💻 Responsável pela catraca
 
 
