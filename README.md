@@ -106,7 +106,11 @@ Como o sistema completo não está hospedado:
 
 ## 🖼️ Capturas de Tela
 
-*(A serem adicionadas posteriormente)*
+<img width="1876" height="930" alt="image" src="https://github.com/user-attachments/assets/ffbdfcc5-191d-4271-aefb-9bf34a9897f9" />
+<img width="1873" height="897" alt="image" src="https://github.com/user-attachments/assets/c0b4ee1c-c244-489f-9292-5f180010b468" />
+<img width="1877" height="901" alt="image" src="https://github.com/user-attachments/assets/6e4382c0-2794-4f25-9756-15f36c4c409d" />
+
+
 
 ------------------------------------------------------------------------
 
