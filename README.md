@@ -101,7 +101,6 @@ Como o sistema completo não está hospedado:
 -   Spring Boot\
 -   Dependências no `pom.xml`\
 -   PostgreSQL\
--   (Opcional) Arduino
 
 ------------------------------------------------------------------------
 
