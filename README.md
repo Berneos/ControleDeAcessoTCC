@@ -116,17 +116,29 @@ Como o sistema completo não está hospedado:
 
 ## 👨‍💻 Autores
 
-### **Breno Martins de Souza**
+### **Breno Martins de Souza** 
 
 -   📱 11 94935-7107\
 -   🔗 LinkedIn: https://www.linkedin.com/in/brenomartinsdev/\
 -   🐙 GitHub: https://github.com/Berneos
+-   💻 Responsável pelo Back-End
 
-### **Daniel de Jesus Leal**
+### **Daniel Leal**
 
 -   📱 11 98819-9876\
 -   🔗 LinkedIn: https://www.linkedin.com/in/daniel-leal-756996309\
 -   🐙 GitHub: https://github.com/Danieu1706
+-   💻 Responsável pelo Front-end
+
+
+### **Karina Rangel**
+
+-   📱 11 11 98929-8505\
+-   🔗 Email: karina.rangel247@gmail.com
+-   💻 Responsável pela catraca
+
+
+
 
 ------------------------------------------------------------------------
 
